@@ -1,0 +1,137 @@
+/* Reset some default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Container to center content and add spacing */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px 0;
+}
+
+/* Header styles */
+header {
+    background-color: #0d47a1;
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2rem;
+}
+
+/* Navigation bar */
+nav {
+    background-color: #1565c0;
+}
+
+nav .container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 10px 15px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ffca28;
+}
+
+/* Highlight active nav link */
+nav a.active {
+    color: #ffca28;
+    font-weight: bold;
+    border-bottom: 2px solid #ffca28;
+}
+
+/* Section styles */
+section {
+    padding: 60px 0;
+}
+
+section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #0d47a1;
+}
+
+section p,
+section ul {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+section ul {
+    list-style-type: none;
+}
+
+section ul li {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+/* Portfolio links */
+section a {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+section a:hover {
+    color: #0d47a1;
+}
+
+/* Contact section */
+#contact p a {
+    color: #0d47a1;
+    font-weight: bold;
+}
+
+#contact p a:hover {
+    color: #0b3d91;
+}
+
+/* Footer styles */
+footer {
+    background-color: #0d47a1;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    nav .container {
+        flex-direction: column;
+    }
+
+    section p,
+    section ul {
+        width: 95%;
+    }
+}
