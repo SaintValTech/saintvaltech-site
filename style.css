@@ -72,23 +72,30 @@ section h2 {
     font-size: 2rem;
 }
 
+/* DEFAULT TEXT — LEFT ALIGNED (IMPORTANT FIX) */
 section p {
     max-width: 850px;
     margin: 0 auto 20px auto;
-    text-align: center;
     font-size: 1.05rem;
+    text-align: left;
 }
 
 section ul {
     list-style: none;
     max-width: 850px;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
 }
 
 section ul li {
     margin-bottom: 14px;
     font-size: 1.05rem;
+}
+
+/* Center text ONLY where it makes sense */
+#about p,
+#services ul {
+    text-align: center;
 }
 
 /* Portfolio project cards */
@@ -139,14 +146,12 @@ section ul li {
     text-decoration: underline;
 }
 
-/* General links */
-section a {
-    color: #1565c0;
-    font-weight: 500;
+/* Contact */
+#contact p {
+    text-align: center;
 }
 
-/* Contact */
-#contact p a {
+#contact a {
     color: #0d47a1;
     font-weight: bold;
 }
