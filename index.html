@@ -3,90 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaintValTech</title>
+    <title>SaintValTech | Cybersecurity & SOC Portfolio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>SaintValTech</h1>
-            <p>Cybersecurity & IT Services | Freelance Portfolio</p>
-        </div>
-    </header>
 
-    <nav>
-        <div class="container">
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
-        </div>
-    </nav>
+<header>
+    <div class="container">
+        <h1>SaintValTech</h1>
+        <p>Cybersecurity & SOC Operations | Professional Portfolio</p>
+    </div>
+</header>
 
-    <section id="about">
-        <div class="container">
-            <h2>About SaintValTech</h2>
-            <p>Hi! I'm Emeka Valentine Ogbu, founder of SaintValTech. I specialize in cybersecurity, network security, SIEM monitoring, endpoint protection, and homelab projects. My mission is to help individuals and businesses secure their digital environments.</p>
-        </div>
-    </section>
+<nav>
+    <div class="container">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
 
-    <section id="services">
-        <div class="container">
-            <h2>Services</h2>
+<section id="about">
+    <div class="container">
+        <h2>About SaintValTech</h2>
+        <p>
+            Hi, I’m <strong>Emeka Valentine Ogbu</strong>, founder of SaintValTech.
+            I focus on <strong>Security Operations (SOC), detection engineering,
+            incident response, and vulnerability management</strong>.
+        </p>
+        <p>
+            My work emphasizes <strong>governed security operations</strong> —
+            ensuring security activities such as scanning, detection, and response
+            are <em>expected, auditable, and measurable</em> rather than reactive.
+        </p>
+        <p>
+            I build and document enterprise-style security labs that mirror
+            real-world SOC workflows using SIEM, IDS, EDR, and identity systems.
+        </p>
+    </div>
+</section>
+
+<section id="services">
+    <div class="container">
+        <h2>Core Focus Areas</h2>
+        <ul>
+            <li>SOC Monitoring, Detection & Incident Response</li>
+            <li>SIEM Engineering & Log Analysis (Wazuh, Security Onion, Microsoft Sentinel)</li>
+            <li>Vulnerability Management & Risk-Based Assessment</li>
+            <li>Endpoint & Identity Security (EDR, Active Directory, IAM)</li>
+            <li>Purple Team Detection Validation <em>(Roadmap)</em></li>
+        </ul>
+    </div>
+</section>
+
+<section id="portfolio">
+    <div class="container">
+        <h2>Portfolio | Selected Security Projects</h2>
+
+        <div class="project">
+            <h3>Enterprise Credentialed Vulnerability Scanning & Detection Validation</h3>
+            <p>
+                Enterprise-style credentialed vulnerability assessment against an
+                Active Directory Domain Controller, emphasizing secure execution,
+                identity governance, and SOC-level detection validation rather than
+                raw vulnerability counts.
+            </p>
             <ul>
-                <li>Cybersecurity Consulting & Strategy</li>
-                <li>Network & Endpoint Security Solutions</li>
-                <li>SIEM Implementation & Monitoring</li>
-                <li>Homelab Project Setup & Documentation</li>
-                <li>Purple Team Exercises & Penetration Testing</li>
+                <li>Hardened Kali Linux scanner treated as a Tier-0 system</li>
+                <li>Dedicated AD service account with strict GPO controls</li>
+                <li>Credentialed OpenVAS scanning with zero critical findings</li>
+                <li>Detection validated across IDS, SIEM, and EDR tooling</li>
             </ul>
+            <a href="https://github.com/SaintValTech/enterprise-credentialed-vulnerability-scanning"
+               target="_blank" rel="noopener">
+               View Project on GitHub
+            </a>
         </div>
-    </section>
 
-    <section id="portfolio">
-        <div class="container">
-            <h2>Portfolio / Projects</h2>
+        <div class="project">
+            <h3>Risk-Based Vulnerability Management with Wazuh</h3>
+            <p>
+                Real-world vulnerability management case study demonstrating how
+                security teams evaluate CVEs using environmental context,
+                remediation testing, and documented risk treatment decisions.
+            </p>
             <ul>
-                <li><strong>SaintValTech Homelab:</strong> SIEM monitoring (Security Onion, Wazuh, Microsoft Sentinel), firewalls, and endpoint security.</li>
-                <li><strong>Network Hardening:</strong> VLANs, VPNs, pfSense firewall configurations.</li>
-                <li><strong>Endpoint Security:</strong> Microsoft Defender deployment, Linux monitoring, compliance configuration.</li>
-                <li><strong>Zbot C2 Malware Incident Investigation:</strong> Full malware detection and network traffic analysis in a VMware-based SOC lab using Security Onion, Suricata, Strelka, pfSense, and Wireshark.
-                    <ul>
-                        <li>Detected potential Trojan/Bifrose (Zbot) C2 traffic</li>
-                        <li>Validated IDS and SIEM detection capabilities</li>
-                        <li>Created full incident report with indicators of compromise (IOCs)</li>
-                        <li>Demonstrated false positive analysis and incident handling workflow</li>
-                    </ul>
-                    <a href="https://github.com/EmekaValentineOgbu/SaintValTech-Homelab/tree/main/real-world-incidents/Zbot-C2-Traffic-Investigation" target="_blank">View Full Report on GitHub</a>
-                </li>
-                <li><strong>Account Takeover & Email Extortion Investigation:</strong> Incident response and containment of online scams targeting a family member.
-                    <ul>
-                        <li><strong>Incident 1 – Advance Fee / Fraud Scam ($300 USD):</strong> Clicked a fraudulent YouTube link; personal info submitted; actions: blocked site, documented payment, educated victim.</li>
-                        <li><strong>Incident 2 – Email Extortion / Account Takeover ($500 USD):</strong> Spoofed email threatening release of non-existent content; actions: secured Outlook account, removed unauthorized recovery access, enabled MFA, deployed Bitdefender Mobile Security.</li>
-                        <li>Evidence preservation: screenshots, email headers, payment proof, PDF report.</li>
-                        <li>Skills applied: incident response, account recovery, MFA implementation, endpoint hardening, scam awareness.</li>
-                        <li>Outcome: Account fully secured, no payment made, layered security implemented to prevent recurrence.</li>
-                    </ul>
-                </li>
+                <li>Contextual risk re-scoring beyond CVSS severity</li>
+                <li>Dependency impact analysis within the Python ecosystem</li>
+                <li>Formal risk acceptance and alert noise reduction</li>
             </ul>
-            <p>View all projects on <a href="https://github.com/SaintValTech" target="_blank">GitHub</a>.</p>
+            <a href="https://github.com/SaintValTech/wazuh-risk-based-vulnerability-management"
+               target="_blank" rel="noopener">
+               View Project on GitHub
+            </a>
         </div>
-    </section>
 
-    <section id="contact">
-        <div class="container">
-            <h2>Contact</h2>
-            <p>Email: <a href="mailto:info@saintvaltech.com">info@saintvaltech.com</a></p>
+        <div class="project">
+            <h3>Enterprise SOC Homelab & Incident Response</h3>
+            <p>
+                End-to-end SOC homelab demonstrating detection, investigation,
+                and response across network, endpoint, and identity layers.
+            </p>
+            <ul>
+                <li>Security Onion, Wazuh, Microsoft Sentinel integration</li>
+                <li>pfSense firewalling, VLAN segmentation, and VPN visibility</li>
+                <li>Zbot (Trojan/Bifrose) C2 traffic investigation</li>
+                <li>Account takeover and email extortion incident response</li>
+            </ul>
+            <a href="https://github.com/SaintValTech/SaintValTech-Homelab/tree/main/real-world-incidents"
+               target="_blank" rel="noopener">
+               View Incident Reports on GitHub
+            </a>
         </div>
-    </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 SaintValTech | All rights reserved.</p>
-        </div>
-    </footer>
+        <p>
+            Current focus is SOC detection, response, and validation, with a planned
+            transition toward Purple Team operations emphasizing
+            detection-informed testing and control validation.
+        </p>
 
-    <script src="script.js"></script>
+        <p>
+            View additional technical work on
+            <a href="https://github.com/SaintValTech" target="_blank" rel="noopener">GitHub</a>.
+        </p>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <h2>Contact</h2>
+        <p>Email: <a href="mailto:info@saintvaltech.com">info@saintvaltech.com</a></p>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2026 SaintValTech | All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
 
