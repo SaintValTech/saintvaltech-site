@@ -1,131 +1,714 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaintValTech | Cybersecurity & SOC Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaintValTech | Cybersecurity Portfolio</title>
+  <meta
+    name="description"
+    content="SaintValTech cybersecurity portfolio by Emeka Valentine Ogbu featuring SOC, SIEM, incident response, SOAR, hybrid identity, Zero Trust, and network security projects."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1180px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .section {
+      padding: 5rem 0;
+    }
+
+    .hero {
+      padding: 6rem 0 5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 2vw, 2.3rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-subheading {
+      font-size: 1.15rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero p,
+    .section p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions,
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .hero-card,
+    .about-preview,
+    .direction-box,
+    .contact-box,
+    .focus-card,
+    .project-card,
+    .cert-item,
+    .tool-group {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card ul,
+    .tool-group ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: var(--muted);
+    }
+
+    .hero-card li,
+    .tool-group li {
+      margin-bottom: 0.7rem;
+    }
+
+    .section-header {
+      max-width: 860px;
+      margin-bottom: 2rem;
+    }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.3rem;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .project-focus {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .project-card .btn {
+      width: fit-content;
+      margin-top: auto;
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .cert-item strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+    }
+
+    .note {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .focus-grid,
+      .projects-grid,
+      .cert-grid,
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 5rem;
+      }
+
+      .section {
+        padding: 4rem 0;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-    <div class="container">
-        <h1>SaintValTech</h1>
-        <p>Cybersecurity & SOC Operations | Professional Portfolio</p>
-    </div>
-</header>
-
-<nav>
-    <div class="container">
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#portfolio">Portfolio</a>
+        <a href="#projects">Projects</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#tools">Tools</a>
         <a href="#contact">Contact</a>
+      </nav>
     </div>
-</nav>
+  </header>
 
-<section id="about">
-    <div class="container">
-        <h2>About SaintValTech</h2>
-        <p>
-            Hi, I’m <strong>Emeka Valentine Ogbu</strong>, founder of SaintValTech.
-            I focus on <strong>Security Operations (SOC), detection engineering,
-            incident response, and vulnerability management</strong>.
-        </p>
-        <p>
-            My work emphasizes <strong>governed security operations</strong> —
-            ensuring security activities such as scanning, detection, and response
-            are expected, auditable, and measurable rather than reactive.
-        </p>
-        <p>
-            I design and document enterprise-style security labs that mirror
-            real-world SOC workflows using SIEM, IDS, EDR, and identity systems.
-        </p>
-    </div>
-</section>
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Cybersecurity Portfolio</div>
+          <h1>SaintValTech</h1>
+          <div class="hero-subheading">SOC, SIEM, Incident Response, SOAR, and Network Security</div>
 
-<section id="services">
-    <div class="container">
-        <h2>Core Focus Areas</h2>
-        <ul>
-            <li>SOC Monitoring, Detection & Incident Response</li>
-            <li>SIEM Engineering & Log Analysis (Wazuh, Security Onion, Microsoft Sentinel)</li>
-            <li>Vulnerability Management & Risk-Based Assessment</li>
-            <li>Endpoint & Identity Security (EDR, Active Directory, IAM)</li>
-            <li>Purple Team Detection Validation <em>(Roadmap)</em></li>
-        </ul>
-    </div>
-</section>
+          <p>
+            Hands-on cybersecurity portfolio by <strong>Emeka Valentine Ogbu</strong>
+            showcasing enterprise-style lab projects across security operations,
+            network defense, vulnerability management, hybrid identity, Zero Trust access,
+            and multi-source SOAR integration.
+          </p>
 
-<section id="portfolio">
-  <div class="container">
-    <h2>Portfolio | Selected Security Projects</h2>
+          <p>
+            Built around practical, well-documented projects using
+            <strong>Microsoft Sentinel, Wazuh, Security Onion, pfSense, TheHive, Cortex, Shuffle, and Cloudflare Zero Trust</strong>.
+          </p>
 
-    <div class="project">
-      <h3>Enterprise Credentialed Vulnerability Scanning & Detection Validation</h3>
-      <p>
-        Enterprise-style credentialed vulnerability assessment against an Active Directory
-        Domain Controller, emphasizing secure execution, identity governance, and SOC-level
-        detection validation rather than raw vulnerability counts.
-      </p>
-      <ul>
-        <li>Hardened Kali Linux scanner treated as a Tier-0 system</li>
-        <li>Dedicated AD service account with strict GPO controls</li>
-        <li>Credentialed OpenVAS scanning with zero critical findings</li>
-        <li>Detection validated across IDS, SIEM, and EDR tooling</li>
-      </ul>
-      <div class="project-link">
-        <a href="https://github.com/SaintValTech/enterprise-credentialed-vulnerability-scanning" target="_blank">
-          View Project on GitHub →
-        </a>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a class="btn btn-secondary" href="https://github.com/SaintValTech" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/emeka-valentine-ogbu" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn btn-secondary" href="#contact">Contact</a>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <h3>Portfolio Highlights</h3>
+          <ul>
+            <li>Enterprise-style SOC homelab architecture with segmentation, SIEM, and IDS visibility</li>
+            <li>Hybrid identity, Microsoft security, and Zero Trust implementation projects</li>
+            <li>Documented SOAR workflows across Sentinel, Wazuh, Shuffle, TheHive, and Cortex</li>
+            <li>Structured case-study style documentation instead of isolated tool demos</li>
+          </ul>
+          <p class="note">Currently targeting IT Support, NOC, Tier 1 SOC, and security operations opportunities.</p>
+        </aside>
       </div>
-    </div>
+    </section>
 
-    <div class="project">
-      <h3>Risk-Based Vulnerability Management with Wazuh</h3>
-      <p>
-        Real-world vulnerability management case study demonstrating how security teams
-        evaluate CVEs using environmental context, remediation testing, and documented
-        risk treatment decisions.
-      </p>
-      <ul>
-        <li>Contextual risk re-scoring beyond CVSS severity</li>
-        <li>Dependency impact analysis within the Python ecosystem</li>
-        <li>Formal risk acceptance and alert noise reduction</li>
-      </ul>
-      <div class="project-link">
-        <a href="https://github.com/SaintValTech/wazuh-risk-based-vulnerability-management" target="_blank">
-          View Project on GitHub →
-        </a>
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">About SaintValTech</div>
+          <h2>Technical portfolio built around real projects, real troubleshooting, and structured documentation</h2>
+        </div>
+
+        <div class="about-preview">
+          <p>
+            SaintValTech is my technical portfolio and project platform, built to document
+            hands-on work across security operations, SIEM monitoring, incident response,
+            vulnerability management, hybrid identity, and network security engineering.
+            The projects on this site are organized as practical case studies that show
+            how infrastructure, identity, detection, automation, and analyst workflow fit
+            together in a real-world security environment.
+          </p>
+
+          <p>
+            While I am currently focused on opportunities in
+            <strong>IT Support, NOC, Tier 1 SOC, and security operations</strong>,
+            this portfolio reflects the deeper technical work I actively build, validate,
+            and document.
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="project">
-      <h3>Enterprise SOC Homelab & Incident Response</h3>
-      <p>
-        End-to-end SOC homelab demonstrating detection, investigation, and response across
-        network, endpoint, and identity layers.
-      </p>
-      <ul>
-        <li>Security Onion, Wazuh, Microsoft Sentinel integration</li>
-        <li>pfSense firewalling, VLAN segmentation, and VPN visibility</li>
-        <li>Zbot (Trojan/Bifrose) C2 traffic investigation</li>
-        <li>Account takeover and email extortion incident response</li>
-      </ul>
-      <div class="project-link">
-        <a href="https://github.com/SaintValTech/SaintValTech-Homelab" target="_blank">
-          View Incident Reports on GitHub →
-        </a>
+    <section class="section" id="focus">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Core Focus Areas</div>
+          <h2>Hands-on technical areas that define the SaintValTech portfolio</h2>
+          <p>The SaintValTech portfolio is built around the following areas of practical technical focus:</p>
+        </div>
+
+        <div class="focus-grid">
+          <div class="focus-card">
+            <h3>SIEM Monitoring &amp; Alert Triage</h3>
+            <p>Practical work in event visibility, alert review, incident validation, and investigation workflows using tools such as Microsoft Sentinel and Wazuh.</p>
+          </div>
+
+          <div class="focus-card">
+            <h3>Incident Response &amp; Case Documentation</h3>
+            <p>Projects involving alert handling, containment logic, evidence preservation, incident workflow design, and structured documentation for analyst use.</p>
+          </div>
+
+          <div class="focus-card">
+            <h3>Vulnerability Management &amp; Detection Validation</h3>
+            <p>Credentialed scanning, remediation testing, contextual risk analysis, and validation of how security tools detect and report meaningful activity.</p>
+          </div>
+
+          <div class="focus-card">
+            <h3>Firewalling, VLAN Segmentation &amp; Network Security</h3>
+            <p>Enterprise-style lab architecture using pfSense, pfBlockerNG, VLANs, Cisco switching, mirrored traffic visibility, and controlled trust boundaries.</p>
+          </div>
+
+          <div class="focus-card">
+            <h3>Hybrid Identity &amp; Microsoft Security</h3>
+            <p>Domain controller hardening, Azure AD Connect, Hybrid Azure AD Join, Defender for Endpoint integration, and identity-aware Microsoft security workflows.</p>
+          </div>
+
+          <div class="focus-card">
+            <h3>SOAR Integration &amp; Analyst Workflow Design</h3>
+            <p>Automation architecture using Azure Logic Apps, Shuffle, TheHive, and Cortex to separate detection, orchestration, enrichment, and case handling.</p>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Featured Projects</div>
+          <h2>Core projects in the SaintValTech portfolio</h2>
+          <p>
+            These projects represent the core of the SaintValTech portfolio. Together, they show
+            how infrastructure, identity, detection, automation, and case management can be integrated
+            into a realistic enterprise-style SOC environment.
+          </p>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project-card">
+            <h3>Enterprise SOC Homelab &amp; Network Security Architecture</h3>
+            <p>
+              Designed and deployed a segmented enterprise-style SOC lab using pfSense, VLANs,
+              Cisco switching, Wazuh, and Security Onion. This project established the network,
+              monitoring, and visibility foundation for the broader SaintValTech environment,
+              including mirrored traffic inspection, SIEM support, and controlled separation
+              between lab systems, user traffic, and monitoring infrastructure.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> Network segmentation, pfSense, VLANs, packet visibility, Security Onion, Wazuh, infrastructure design
+            </div>
+            <a class="btn btn-secondary" href="project-1.html">View Project</a>
+          </article>
+
+          <article class="project-card">
+            <h3>Domain Controller Hardening &amp; Hybrid Identity Foundation</h3>
+            <p>
+              Built and hardened a Tier-0 Windows Domain Controller using Kerberos, NTLM, LDAP,
+              SMB, audit policy, PowerShell logging, and firewall baseline controls, then extended
+              the identity environment into Microsoft Entra ID using Azure AD Connect and Hybrid Azure AD Join.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> Active Directory, Group Policy, Kerberos hardening, audit logging, hybrid identity, Microsoft Entra ID
+            </div>
+            <a class="btn btn-secondary" href="project-2.html">View Project</a>
+          </article>
+
+          <article class="project-card">
+            <h3>Microsoft Sentinel SOAR Pipeline &amp; Incident Automation</h3>
+            <p>
+              Created and validated an incident-driven Microsoft Sentinel SOAR foundation using Defender
+              telemetry, NRT analytics rules, automation rules, and Azure Logic Apps. This project verified
+              the full Microsoft-native path from detection to incident creation and playbook execution.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> Microsoft Sentinel, Defender XDR, analytics rules, Logic Apps, incident automation, SOAR validation
+            </div>
+            <a class="btn btn-secondary" href="project-3.html">View Project</a>
+          </article>
+
+          <article class="project-card">
+            <h3>Defender for Endpoint Onboarding &amp; Connectivity Troubleshooting in a Filtered Enterprise Network</h3>
+            <p>
+              Investigated and resolved a Microsoft Defender for Endpoint connectivity enforcement issue
+              on a Windows Server Domain Controller inside a filtered network protected by pfBlockerNG.
+              The work traced the problem to DNSBL-based interference with required Microsoft cloud endpoints
+              and restored healthy communication through controlled whitelisting and validation.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> Microsoft Defender for Endpoint, DNS troubleshooting, pfBlockerNG, endpoint connectivity, Windows Server validation
+            </div>
+            <a class="btn btn-secondary" href="project-4.html">View Project</a>
+          </article>
+
+          <article class="project-card">
+            <h3>Zero Trust Exposure of TheHive Using Cloudflare Tunnel, Access, and Microsoft Entra ID</h3>
+            <p>
+              Published TheHive securely without opening inbound firewall ports by using Cloudflare Tunnel
+              and Cloudflare Access backed by Microsoft Entra ID and MFA. This project replaced traditional
+              port forwarding with a Zero Trust publication model that supported both analyst access and
+              secure Microsoft Sentinel-to-TheHive workflow integration.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> Cloudflare Tunnel, Cloudflare Access, TheHive, Zero Trust, Microsoft Entra ID, MFA, secure service exposure
+            </div>
+            <a class="btn btn-secondary" href="project-5.html">View Project</a>
+          </article>
+
+          <article class="project-card">
+            <h3>Multi-Source SOAR Integration with Sentinel, Security Onion, Wazuh, Shuffle, TheHive, and Cortex</h3>
+            <p>
+              Designed a multi-source SOAR architecture that routes Microsoft Sentinel incidents and
+              high-signal network and endpoint detections into TheHive using Azure Logic Apps, Wazuh,
+              and Shuffle. The project established case-versus-alert routing, deduplication-aware ingestion,
+              and a modular workflow separating detection, orchestration, enrichment, and case management.
+            </p>
+            <div class="project-focus">
+              <strong>Focus Areas:</strong> SOAR, TheHive, Shuffle, Wazuh, Security Onion, Cortex, Logic Apps, case management, multi-source alert routing
+            </div>
+            <a class="btn btn-secondary" href="project-6.html">View Project</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="certifications">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Certifications</div>
+          <h2>Credentials supporting the portfolio</h2>
+          <p>My hands-on project work is supported by industry certifications in security operations, networking, and defensive security fundamentals.</p>
+        </div>
+
+        <div class="cert-grid">
+          <div class="cert-item">
+            <strong>CompTIA CySA+</strong>
+            <p>Security operations, threat detection, incident response, and vulnerability management.</p>
+          </div>
+
+          <div class="cert-item">
+            <strong>CompTIA Security+</strong>
+            <p>Core defensive security concepts, identity, risk management, and foundational security controls.</p>
+          </div>
+
+          <div class="cert-item">
+            <strong>CompTIA Network+</strong>
+            <p>Networking fundamentals, TCP/IP, routing, switching, segmentation, and troubleshooting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Tools &amp; Platforms</div>
+          <h2>Technologies used across the portfolio</h2>
+          <p>The SaintValTech portfolio is built across a mix of security, infrastructure, identity, and orchestration platforms used throughout these projects.</p>
+        </div>
+
+        <div class="tools-grid">
+          <div class="tool-group">
+            <h3>SIEM, Detection &amp; Monitoring</h3>
+            <ul>
+              <li>Microsoft Sentinel</li>
+              <li>Wazuh</li>
+              <li>Security Onion</li>
+              <li>Zeek</li>
+              <li>Suricata</li>
+            </ul>
+          </div>
+
+          <div class="tool-group">
+            <h3>SOAR, Case Management &amp; Enrichment</h3>
+            <ul>
+              <li>Azure Logic Apps</li>
+              <li>Shuffle</li>
+              <li>TheHive</li>
+              <li>Cortex</li>
+            </ul>
+          </div>
+
+          <div class="tool-group">
+            <h3>Network, Firewall &amp; Infrastructure</h3>
+            <ul>
+              <li>pfSense</li>
+              <li>pfBlockerNG</li>
+              <li>VLANs</li>
+              <li>Cisco CBS350</li>
+              <li>NAT</li>
+              <li>WireGuard</li>
+              <li>OpenVPN</li>
+            </ul>
+          </div>
+
+          <div class="tool-group">
+            <h3>Identity, Endpoint &amp; Microsoft Security</h3>
+            <ul>
+              <li>Microsoft Defender for Endpoint</li>
+              <li>Microsoft Defender XDR</li>
+              <li>Microsoft Entra ID</li>
+              <li>Active Directory</li>
+              <li>Hybrid Azure AD Join</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="direction">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Current Professional Direction</div>
+          <h2>Where the portfolio connects to my career focus</h2>
+        </div>
+
+        <div class="direction-box">
+          <p>
+            I am currently focused on opportunities in <strong>IT Support, NOC, Tier 1 SOC, and security operations</strong>,
+            while continuing to deepen my hands-on experience in SIEM monitoring, alert triage, incident response,
+            vulnerability management, hybrid identity, and SOAR architecture.
+          </p>
+          <p>
+            SaintValTech serves as the technical proof layer behind that direction, showing how I approach infrastructure,
+            detection, troubleshooting, automation, and case workflow design in practice.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <div class="muted-label">Connect</div>
+          <h2>Get in touch</h2>
+          <p>For recruiters, hiring managers, collaborators, or anyone interested in my work, the best ways to connect are through LinkedIn, GitHub, or email.</p>
+        </div>
+
+        <div class="contact-box">
+          <div class="contact-links">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/emeka-valentine-ogbu" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn btn-secondary" href="https://github.com/SaintValTech" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn btn-secondary" href="mailto:ogbuvalentinoqb@gmail.com">Email</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
     </div>
+  </footer>
 
-    <p style="text-align:center; margin-top:40px;">
-      Current focus is SOC detection, response, and validation, with a planned transition
-      toward Purple Team operations emphasizing detection-informed testing and control validation.
-      <br>
-      View additional technical work on <a href="https://github.com/SaintValTech">GitHub</a>.
-    </p>
-
-  </div>
-</section>
-
+</body>
+</html>

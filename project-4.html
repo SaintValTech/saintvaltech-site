@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Defender for Endpoint Onboarding &amp; Connectivity Troubleshooting | SaintValTech</title>
+  <meta
+    name="description"
+    content="SaintValTech project page for Defender for Endpoint Onboarding & Connectivity Troubleshooting in a Filtered Enterprise Network."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1100px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .section { padding: 2.8rem 0; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 0.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .side-card,
+    .section-card {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card { margin-bottom: 1.2rem; }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      margin: 0.6rem 0 0 1.2rem;
+      color: var(--muted);
+    }
+
+    li { margin-bottom: 0.55rem; }
+
+    .meta-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    code {
+      color: var(--accent);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero { padding-top: 4.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#certifications">Certifications</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to Projects</a>
+        <div class="eyebrow">SaintValTech Project</div>
+        <h1>Defender for Endpoint Onboarding &amp; Connectivity Troubleshooting in a Filtered Enterprise Network</h1>
+        <div class="subtitle">Troubleshooting Microsoft Defender for Endpoint health and cloud connectivity inside a DNS-filtered security architecture</div>
+        <p>
+          This project documents the onboarding validation and post-onboarding troubleshooting of
+          Microsoft Defender for Endpoint on a Windows Server Domain Controller inside a filtered
+          enterprise-style lab network. Although the Defender sensor service was installed and running,
+          the device reported a configuration enforcement and connectivity issue in the Microsoft security portal.
+          The root cause was traced to DNS-based filtering interfering with required Microsoft Defender cloud endpoints.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">GitHub Repo</a>
+          <a class="btn btn-secondary" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div>
+          <div class="section-card">
+            <div class="muted-label">Objective</div>
+            <h2>Project Objective</h2>
+            <p>
+              The objective of this project was to:
+            </p>
+            <ul>
+              <li>validate Microsoft Defender for Endpoint health on a Windows Server / Domain Controller</li>
+              <li>troubleshoot a Microsoft portal configuration enforcement error</li>
+              <li>determine whether the problem was caused by DNS, firewall, endpoint state, or onboarding failure</li>
+              <li>restore required Microsoft Defender connectivity without weakening the lab’s filtering posture</li>
+              <li>document a reliable server-specific validation method for Microsoft Defender for Endpoint</li>
+              <li>confirm Defender for Identity sensor health where applicable</li>
+              <li>create an operational troubleshooting reference for filtered enterprise networks</li>
+            </ul>
+            <p>
+              This project was designed to reflect a real-world scenario where endpoint security tooling
+              must coexist with aggressive DNS and edge filtering controls.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Environment</div>
+            <h2>Environment Overview</h2>
+
+            <h3>Affected System</h3>
+            <ul>
+              <li><strong>Host:</strong> CORP-DC01</li>
+              <li><strong>Role:</strong> Domain Controller</li>
+              <li><strong>Platform:</strong> Windows Server</li>
+              <li><strong>Function:</strong> Tier-0 identity infrastructure and Microsoft security onboarding target</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Network Context</h3>
+            <p>
+              The device existed behind a filtered security architecture that included:
+            </p>
+            <ul>
+              <li>pfSense at the edge</li>
+              <li>pfBlockerNG DNSBL and IP reputation controls</li>
+              <li>segmented VLAN design</li>
+              <li>controlled outbound security filtering</li>
+              <li>enterprise-style DNS handling through internal infrastructure</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Security Stack Context</h3>
+            <p>
+              The affected server was expected to support:
+            </p>
+            <ul>
+              <li>Microsoft Defender Antivirus</li>
+              <li>Microsoft Defender for Endpoint</li>
+              <li>Microsoft Defender for Identity sensor operations</li>
+              <li>Microsoft Sentinel ingestion</li>
+              <li>hybrid identity workflows via Microsoft Entra ID</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Problem Statement</div>
+            <h2>Problem Statement</h2>
+            <p>
+              After onboarding activity, Microsoft security tooling indicated that the device had a
+              configuration enforcement or connectivity issue.
+            </p>
+            <p>
+              This created an ambiguous state:
+            </p>
+            <ul>
+              <li>onboarding appeared partially complete</li>
+              <li>core services were running locally</li>
+              <li>general internet connectivity existed</li>
+              <li>portal health was not clean</li>
+              <li>policy and telemetry confidence could not be assumed</li>
+            </ul>
+            <p>
+              The project therefore became a full operational investigation into whether the problem was:
+            </p>
+            <ul>
+              <li>a failed onboarding</li>
+              <li>a DNS resolution issue</li>
+              <li>a TCP/443 reachability issue</li>
+              <li>a service-state issue</li>
+              <li>a validation-method misunderstanding</li>
+              <li>or some combination of the above</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Initial Validation</div>
+            <h2>Initial Validation</h2>
+
+            <h3>1. Defender Local Health Checks</h3>
+            <p>
+              The first stage focused on confirming the local state of Defender on the Windows Server.
+            </p>
+            <p><strong>Commands used:</strong></p>
+            <ul>
+              <li><code>Get-MpComputerStatus</code></li>
+              <li><code>Get-Service Sense</code></li>
+            </ul>
+            <p><strong>Observed indicators:</strong></p>
+            <ul>
+              <li>Antivirus enabled</li>
+              <li>Real-time protection enabled</li>
+              <li>behavior monitoring enabled</li>
+              <li>signatures current</li>
+              <li>Sense service running</li>
+              <li>tamper protection enabled via ATP</li>
+              <li>host recognized as a virtual machine</li>
+            </ul>
+            <p>
+              Initial conclusion: the local Microsoft Defender stack appeared healthy.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">2. Baseline Internet Validation</h3>
+            <p>
+              General outbound connectivity was tested to determine whether the device had a broad internet access problem.
+            </p>
+            <p><strong>Example validation:</strong></p>
+            <ul>
+              <li><code>Invoke-WebRequest https://www.microsoft.com</code></li>
+            </ul>
+            <p>
+              The request succeeded, confirming that general outbound HTTPS was functional.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Troubleshooting Workflow</div>
+            <h2>Troubleshooting Workflow</h2>
+
+            <h3>3. Endpoint Connectivity Testing</h3>
+            <p>
+              The next phase focused on specific Microsoft Defender-related endpoints.
+            </p>
+            <p><strong>Example tests performed:</strong></p>
+            <ul>
+              <li><code>Invoke-WebRequest https://winatp-gw-cus.microsoft.com/ping</code></li>
+              <li><code>Invoke-WebRequest https://winatp-cus.microsoft.com/ping</code></li>
+              <li><code>Test-NetConnection endpoint.security.microsoft.com -Port 443</code></li>
+              <li><code>Test-NetConnection security.microsoft.com -Port 443</code></li>
+              <li><code>Test-NetConnection login.microsoftonline.com -Port 443</code></li>
+              <li><code>Test-NetConnection enterpriseregistration.windows.net -Port 443</code></li>
+            </ul>
+            <p><strong>Key findings:</strong></p>
+            <ul>
+              <li>some Microsoft endpoints were reachable</li>
+              <li>some requests returned HTTP 404, which still indicated network reachability</li>
+              <li>at least one critical endpoint failed with remote name could not be resolved</li>
+              <li><code>endpoint.security.microsoft.com</code> failed DNS resolution</li>
+              <li>general Microsoft services like <code>security.microsoft.com</code> and <code>login.microsoftonline.com</code> were reachable</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">4. Sense Service Handling</h3>
+            <p>
+              The Sense service was checked to ensure that the MDE sensor component was present and active.
+            </p>
+            <ul>
+              <li><code>Get-Service Sense</code></li>
+            </ul>
+            <p>
+              The Sense service was running. Attempts to restart it were not the correct primary fix path and were
+              also complicated by service protection and privilege boundaries.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Root Cause Analysis</div>
+            <h2>Root Cause Analysis</h2>
+            <p>
+              The primary root cause was identified as:
+            </p>
+            <p>
+              <strong>DNS-based filtering interfering with resolution of required Microsoft Defender for Endpoint cloud endpoints.</strong>
+            </p>
+            <p><strong>Evidence supporting this conclusion:</strong></p>
+            <ul>
+              <li>general internet access worked</li>
+              <li>some Microsoft security endpoints were reachable</li>
+              <li>specific Defender-related hostnames failed DNS resolution</li>
+              <li>the environment used pfBlockerNG DNSBL</li>
+              <li>post-whitelist rebuild behavior aligned with restored resolution expectations</li>
+              <li>the portal error described connectivity enforcement issues, which matched the DNS findings</li>
+            </ul>
+            <p>
+              In enterprise or semi-enterprise environments, security filtering can accidentally block cloud telemetry,
+              service discovery, or Microsoft security platform dependencies. This was a real operational dependency conflict.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Remediation</div>
+            <h2>Remediation</h2>
+
+            <h3>pfBlockerNG DNSBL Review</h3>
+            <p>
+              Because the network edge used pfBlockerNG with multiple DNSBL and IP reputation feeds,
+              the remediation path focused on reviewing filtering behavior and whitelisting required domains.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Microsoft Defender Domain Whitelisting</h3>
+            <p><strong>Core Defender-related endpoints:</strong></p>
+            <ul>
+              <li><code>.wdatp.com</code></li>
+              <li><code>winatp-gw.microsoft.com</code></li>
+              <li><code>winatp-gw-cus.microsoft.com</code></li>
+              <li><code>winatp-cus.microsoft.com</code></li>
+              <li><code>endpoint.security.microsoft.com</code></li>
+              <li><code>.security.microsoft.com</code></li>
+            </ul>
+
+            <p><strong>Telemetry / pipeline-related domains:</strong></p>
+            <ul>
+              <li><code>browser.pipe.aria.microsoft.com</code></li>
+              <li><code>.aria.microsoft.com</code></li>
+              <li><code>.events.data.microsoft.com</code></li>
+            </ul>
+
+            <p><strong>Shared Microsoft service dependencies:</strong></p>
+            <ul>
+              <li><code>.bing.com</code></li>
+              <li><code>.msn.com</code></li>
+              <li><code>.windows.com</code></li>
+            </ul>
+
+            <p>
+              Allowing only the obvious primary endpoint is often not enough. Microsoft security products depend on multiple
+              service, telemetry, and supporting domains.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">DNSBL Rebuild and Service Reload</h3>
+            <p>
+              After whitelist updates, DNSBL was rebuilt and Unbound / DNSBL services were restarted through pfBlockerNG.
+              This refreshed the filtering layer cleanly and allowed subsequent validation to proceed.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Validation</div>
+            <h2>Validation After Remediation</h2>
+
+            <h3>DNS Validation</h3>
+            <ul>
+              <li><code>Resolve-DnsName endpoint.security.microsoft.com</code></li>
+              <li><code>nslookup endpoint.security.microsoft.com</code></li>
+            </ul>
+            <p>
+              Expected result: previously failing Defender-related domains now resolve successfully.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">TCP/443 Validation</h3>
+            <ul>
+              <li><code>Test-NetConnection endpoint.security.microsoft.com -Port 443</code></li>
+            </ul>
+            <p>
+              Expected result: DNS and outbound HTTPS path both restored.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Local Service Validation</h3>
+            <ul>
+              <li><code>Get-Service Sense</code></li>
+              <li><code>Get-MpComputerStatus</code></li>
+            </ul>
+            <p>
+              Expected state: Sense running, Defender enabled, real-time protection enabled, signatures current.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Portal-Side Validation</h3>
+            <p>
+              Final authority for health confirmation is the Microsoft security portal. Expected improvements included:
+            </p>
+            <ul>
+              <li>connectivity enforcement error clears</li>
+              <li>device reports healthy / up to date state</li>
+              <li>telemetry and policy handling normalize</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Server-Specific Insight</div>
+            <h2>Server-Specific Validation Insight</h2>
+
+            <h3>Why OnboardingState Was Misleading</h3>
+            <p>
+              One of the most important lessons in this project was that Windows Server does not expose onboarding status
+              in the same way as Windows client devices.
+            </p>
+            <ul>
+              <li><code>Get-MpComputerStatus | Select OnboardingState</code></li>
+            </ul>
+            <p>
+              A blank <code>OnboardingState</code> on Windows Server is not, by itself, proof of failed onboarding.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Correct Validation Model for Servers</h3>
+            <ul>
+              <li>Sense service state</li>
+              <li>Defender health indicators</li>
+              <li>DNS and endpoint connectivity tests</li>
+              <li>portal device visibility and health</li>
+              <li>Defender for Identity sensor status where relevant</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Defender for Identity</div>
+            <h2>Defender for Identity Sensor Findings</h2>
+            <p>
+              The environment also included Defender for Identity sensor validation.
+            </p>
+            <ul>
+              <li>sensor page and workflows were reviewed</li>
+              <li>the Domain Controller sensor appeared present</li>
+              <li>service status showed running</li>
+              <li>health showed healthy</li>
+              <li>version data appeared current</li>
+            </ul>
+            <p>
+              Where the sensor showed running and healthy state, Defender for Identity was already in a good operational condition.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">ADCS / ADFS “Unable to Determine” Interpretation</h3>
+            <p>
+              A related portal observation involved “Unable to determine” status for ADCS / ADFS-related visibility.
+              In this case, the most likely explanation was that those roles were not installed on the server.
+            </p>
+            <p>
+              This is not automatically an error. It can simply mean the role is not deployed or not applicable in the current architecture.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Challenges</div>
+            <h2>Challenges Encountered</h2>
+            <ul>
+              <li>one security control impaired another: DNSBL filtering interfered with cloud security tooling</li>
+              <li>distinguishing local service health from cloud onboarding completion</li>
+              <li>separating DNS failures from transport failures</li>
+              <li>interpreting Microsoft portal health correctly in a server environment</li>
+              <li>avoiding misleading client-style validation assumptions on Windows Server</li>
+            </ul>
+            <p>
+              Without proper interpretation, the environment could easily have been misdiagnosed as a bad onboarding,
+              broken Sense service, or failed internet access problem.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Value</div>
+            <h2>Security &amp; Operational Value</h2>
+            <p>
+              This project demonstrates practical capability in:
+            </p>
+            <ul>
+              <li>Microsoft Defender for Endpoint troubleshooting</li>
+              <li>Windows Server security validation</li>
+              <li>DNS and network dependency analysis</li>
+              <li>pfBlockerNG DNSBL operations</li>
+              <li>Microsoft endpoint whitelisting strategy</li>
+              <li>interpreting cloud security platform health correctly</li>
+              <li>resolving conflicts between network security controls and endpoint tooling</li>
+              <li>Defender for Identity validation</li>
+              <li>portal-to-host troubleshooting workflow</li>
+            </ul>
+            <p>
+              Operationally, this project matters because successful onboarding is not just about installing an agent
+              or seeing a running service. Real success depends on cloud connectivity, correct DNS behavior, endpoint health,
+              portal-side validation, and architecture-aware interpretation of status indicators.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Outcome</div>
+            <h2>Outcome</h2>
+            <p>
+              This project successfully identified and remediated a Microsoft Defender for Endpoint connectivity enforcement issue
+              caused by DNS-based filtering in the lab’s security architecture. It also established a more accurate and operationally
+              sound validation method for Microsoft Defender on Windows Server, avoiding misleading client-side assumptions such as
+              blank OnboardingState interpretation.
+            </p>
+            <p>
+              The result was a healthier, more trustworthy Microsoft security posture for the domain controller and a documented
+              troubleshooting pattern that can be applied to filtered enterprise environments in the future.
+            </p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-card">
+            <div class="muted-label">Project Summary</div>
+            <h3>Quick Overview</h3>
+            <div class="meta-list">
+              <div class="meta-item">
+                <strong>Project Type</strong>
+                <span>Endpoint Security / Troubleshooting / Microsoft Security</span>
+              </div>
+              <div class="meta-item">
+                <strong>Core Platforms</strong>
+                <span>Microsoft Defender for Endpoint, Windows Server, pfSense, pfBlockerNG</span>
+              </div>
+              <div class="meta-item">
+                <strong>Focus Areas</strong>
+                <span>MDE validation, DNS troubleshooting, filtered network operations, platform health analysis</span>
+              </div>
+              <div class="meta-item">
+                <strong>Status</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Tools &amp; Technologies</div>
+            <h3>Tools Used</h3>
+            <ul>
+              <li>Microsoft Defender for Endpoint</li>
+              <li>Microsoft Defender Antivirus</li>
+              <li>Sense service</li>
+              <li>Microsoft security portal</li>
+              <li>Microsoft Defender for Identity</li>
+              <li>pfSense</li>
+              <li>pfBlockerNG</li>
+              <li>DNSBL</li>
+              <li>Unbound DNS Resolver</li>
+              <li>Windows Server</li>
+              <li>PowerShell</li>
+              <li>Test-NetConnection</li>
+              <li>Resolve-DnsName</li>
+              <li>Microsoft Entra / hybrid identity environment</li>
+            </ul>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Skills Demonstrated</div>
+            <h3>Key Skills</h3>
+            <ul>
+              <li>endpoint onboarding troubleshooting</li>
+              <li>Microsoft security stack validation</li>
+              <li>DNS troubleshooting</li>
+              <li>pfBlockerNG whitelist design</li>
+              <li>filtered network operations</li>
+              <li>cloud endpoint dependency analysis</li>
+              <li>service-state interpretation</li>
+              <li>server-specific security validation</li>
+              <li>technical documentation</li>
+              <li>incident-style root cause analysis</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

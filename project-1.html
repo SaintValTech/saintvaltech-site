@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise SOC Homelab &amp; Network Security Architecture | SaintValTech</title>
+  <meta
+    name="description"
+    content="SaintValTech project page for Enterprise SOC Homelab & Network Security Architecture."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1100px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .section {
+      padding: 2.8rem 0;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 0.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .side-card,
+    .section-card {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card {
+      margin-bottom: 1.2rem;
+    }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      margin: 0.6rem 0 0 1.2rem;
+      color: var(--muted);
+    }
+
+    li {
+      margin-bottom: 0.55rem;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 4.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#certifications">Certifications</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to Projects</a>
+        <div class="eyebrow">SaintValTech Project</div>
+        <h1>Enterprise SOC Homelab &amp; Network Security Architecture</h1>
+        <div class="subtitle">Segmented security-focused lab environment for SOC visibility, network defense, and operational validation</div>
+        <p>
+          This project documents the design and deployment of a realistic security-focused lab environment built
+          to support enterprise-style network segmentation, firewall policy enforcement, centralized visibility,
+          SIEM and IDS detection workflows, secure remote access, and repeatable operational documentation.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">GitHub Repo</a>
+          <a class="btn btn-secondary" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div>
+          <div class="section-card">
+            <div class="muted-label">Objective</div>
+            <h2>Project Objective</h2>
+            <p>
+              The objective of this project was to build a realistic security-focused lab environment that could support:
+            </p>
+            <ul>
+              <li>enterprise-style network segmentation</li>
+              <li>firewall policy enforcement</li>
+              <li>centralized visibility across endpoints and network traffic</li>
+              <li>SIEM and IDS-based detection workflows</li>
+              <li>secure remote access</li>
+              <li>incident simulation and validation</li>
+              <li>repeatable documentation of security operations processes</li>
+            </ul>
+            <p>
+              This environment serves as the foundational platform for later projects involving Active Directory hardening,
+              Microsoft Sentinel SOAR, Wazuh integrations, TheHive case management, and Zero Trust access design.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Environment</div>
+            <h2>Environment Overview</h2>
+            <p>
+              The homelab was designed to reflect a layered enterprise network with clear separation between user traffic,
+              lab systems, and security tooling.
+            </p>
+
+            <h3>Core Infrastructure</h3>
+            <ul>
+              <li>pfSense (Netgate 2100) as the primary firewall and router</li>
+              <li>Cisco CBS350 switch for VLAN assignment and SPAN / port mirroring</li>
+              <li>UDM Pro for family / personal network segmentation</li>
+              <li>Proxmox / virtualization hosts for Windows, Linux, and security workloads</li>
+              <li>Ubuntu-based SIEM / monitoring hosts</li>
+              <li>Windows Server and Windows client systems</li>
+              <li>Security Onion, Wazuh, and Microsoft security tooling</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Network Segmentation Model</h3>
+            <p>
+              The environment was segmented using VLANs to separate traffic and reduce risk between functions.
+            </p>
+            <ul>
+              <li>VLAN 10 — UDM Pro / family and personal device network</li>
+              <li>VLAN 20 — homelab / testing systems</li>
+              <li>VLAN 30 — SIEM / monitoring infrastructure</li>
+            </ul>
+            <p>
+              This design allowed traffic isolation while still enabling controlled monitoring and inter-VLAN analysis where needed.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Architecture</div>
+            <h2>Architecture Design</h2>
+            <p>
+              The architecture was built around the principle that monitoring infrastructure should be isolated
+              from general-purpose lab activity and personal traffic.
+            </p>
+
+            <h3>Key Design Principles</h3>
+            <ul>
+              <li>firewall-centric control using pfSense</li>
+              <li>traffic separation through VLANs</li>
+              <li>mirrored packet visibility for network monitoring</li>
+              <li>dedicated monitoring segment for SOC tooling</li>
+              <li>remote access through secure VPN methods</li>
+              <li>centralized log collection and analysis</li>
+              <li>realistic detection and incident simulation workflows</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Traffic Visibility Strategy</h3>
+            <p>
+              A SPAN / mirror port on the Cisco switch was configured to feed monitored traffic to the security monitoring stack.
+              This allowed Security Onion and related tools to inspect packet metadata and support network detection use cases
+              without placing the monitoring stack inline.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Remote Access Design</h3>
+            <p>
+              Remote access was implemented using secure methods such as:
+            </p>
+            <ul>
+              <li>OpenVPN</li>
+              <li>WireGuard</li>
+              <li>Cloudflare-supported workflows where relevant later in the overall architecture</li>
+            </ul>
+            <p>
+              This ensured secure access to lab systems without directly exposing internal platforms unnecessarily.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Implementation</div>
+            <h2>Core Components Implemented</h2>
+
+            <h3>1. pfSense Firewall Baseline</h3>
+            <p>pfSense served as the primary network security control point.</p>
+            <ul>
+              <li>VLAN-aware routing</li>
+              <li>NAT</li>
+              <li>DNS services</li>
+              <li>DHCP</li>
+              <li>firewall rule management</li>
+              <li>VPN access support</li>
+            </ul>
+            <p>
+              pfSense was used as the authoritative control plane for segmentation, policy enforcement, and network security visibility.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">2. pfBlockerNG DNSBL &amp; IP Reputation Controls</h3>
+            <p>
+              pfBlockerNG was enabled to strengthen DNS-based and IP-based security filtering at the network edge.
+            </p>
+            <p><strong>DNSBL feeds enabled:</strong></p>
+            <ul>
+              <li>StevenBlack_ADs</li>
+              <li>OpenPhish</li>
+              <li>URLhaus</li>
+              <li>Turkey_High_Risk</li>
+            </ul>
+            <p><strong>IPv4 deny feeds enabled:</strong></p>
+            <ul>
+              <li>CINS_army_v4</li>
+              <li>ET_TOR_All_v4</li>
+              <li>ET_Block_v4</li>
+              <li>ET_Comp_v4</li>
+              <li>ISC_Block_v4</li>
+              <li>Spamhaus_Drop_v4</li>
+              <li>Abuse_SSLBL_v4</li>
+              <li>Abuse_Feodo_C2_v4</li>
+            </ul>
+            <p>
+              These controls provided baseline protection against known malicious or suspicious domains and IPs while also creating
+              a real operational environment for troubleshooting false positives and service dependency issues.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">3. VLAN Segmentation</h3>
+            <p>
+              The network was segmented into dedicated functional zones to reduce attack surface and better simulate enterprise environments.
+            </p>
+            <ul>
+              <li>personal / family network separation</li>
+              <li>homelab testing isolation</li>
+              <li>dedicated SIEM / monitoring subnet</li>
+              <li>protected security tooling placement</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">4. Cisco Switching &amp; SPAN Port Monitoring</h3>
+            <p>
+              The Cisco switch was used not just for VLAN assignment, but also for visibility.
+            </p>
+            <ul>
+              <li>VLAN trunking between infrastructure components</li>
+              <li>isolated access ports by function</li>
+              <li>SPAN / mirror configuration to feed network telemetry into monitoring tools</li>
+            </ul>
+            <p>
+              This allowed packet-level visibility without requiring inline disruption of production-style traffic paths.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">5. Virtualization &amp; Lab Services</h3>
+            <p>
+              The environment hosted multiple virtual machines to support both IT and SOC use cases.
+            </p>
+            <ul>
+              <li>Windows Server for AD, DNS, and DHCP roles</li>
+              <li>Windows 10/11 endpoints</li>
+              <li>Linux hosts</li>
+              <li>Kali / Kali Purple</li>
+              <li>Ubuntu servers</li>
+              <li>vulnerable test systems</li>
+              <li>security tooling hosts</li>
+            </ul>
+            <p>
+              This created a multi-platform environment for log generation, endpoint monitoring, service testing, and attack simulation.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">6. Security Monitoring Stack</h3>
+            <p>
+              The monitoring environment was built to support both host-based and network-based visibility.
+            </p>
+            <ul>
+              <li>Wazuh for SIEM / endpoint visibility</li>
+              <li>Security Onion for IDS / NSM workflows</li>
+              <li>Zeek for network metadata</li>
+              <li>Suricata for signature-based detection</li>
+              <li>Microsoft Defender / Sentinel integrations in related projects</li>
+            </ul>
+            <p>
+              The result was a layered visibility model combining logs, alerts, telemetry, and packet-level evidence.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Implementation Highlights</div>
+            <h2>Implementation Highlights</h2>
+
+            <h3>Segmentation &amp; Routing</h3>
+            <p>
+              The environment was configured so that each major trust boundary had a defined purpose, and firewall rules controlled
+              communication between networks. This created a realistic operational model for:
+            </p>
+            <ul>
+              <li>east-west traffic control</li>
+              <li>monitoring policy validation</li>
+              <li>troubleshooting connectivity issues</li>
+              <li>validating detection coverage</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Monitoring Placement</h3>
+            <p>
+              Monitoring systems were deliberately isolated from general user and lab traffic while still receiving mirrored network
+              data and system logs. This reflected a security architecture approach where monitoring infrastructure is protected
+              rather than casually colocated.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">DNS &amp; Security Filtering</h3>
+            <p>
+              DNSBL and IP reputation controls were enabled to simulate a realistic defensive posture. This also created opportunities
+              to validate how security controls can interfere with cloud and telemetry services when not properly whitelisted.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Operational Documentation</h3>
+            <p>
+              The environment was documented as an evolving enterprise-style platform, allowing later projects to inherit a stable
+              and explainable foundation. This is important because the value of a SOC lab is not only in building it, but in being
+              able to explain and defend the architecture.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Challenges</div>
+            <h2>Challenges Encountered</h2>
+            <p>
+              As with real environments, the project included operational complexity beyond simple setup.
+            </p>
+            <ul>
+              <li>balancing secure filtering with application and cloud service dependencies</li>
+              <li>managing segmentation without breaking necessary communication paths</li>
+              <li>handling mirrored traffic visibility correctly</li>
+              <li>ensuring SIEM and IDS tools received the right telemetry sources</li>
+              <li>maintaining clear separation between lab workloads and monitoring systems</li>
+              <li>supporting remote administration without weakening the edge posture</li>
+            </ul>
+            <p>
+              These challenges were important because they made the project operationally realistic rather than purely academic.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Validation</div>
+            <h2>Validation &amp; Results</h2>
+            <p>
+              Validation focused on confirming that the environment was not just deployed, but working as intended.
+            </p>
+            <ul>
+              <li>verifying VLAN assignment and isolation</li>
+              <li>confirming pfSense routing, DNS, and DHCP behavior</li>
+              <li>validating pfBlockerNG feed activation and DNSBL updates</li>
+              <li>confirming mirror / SPAN traffic delivery to monitoring tools</li>
+              <li>reviewing logs and detections in Wazuh and Security Onion</li>
+              <li>testing remote access and administrative connectivity</li>
+              <li>confirming endpoint visibility across Windows and Linux systems</li>
+            </ul>
+            <p>
+              This validated the environment as a usable SOC and IT operations platform rather than a static lab build.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Value</div>
+            <h2>Security &amp; Operational Value</h2>
+            <p>
+              This project demonstrates practical capability in:
+            </p>
+            <ul>
+              <li>network segmentation</li>
+              <li>firewall administration</li>
+              <li>DNS-based filtering</li>
+              <li>SIEM / IDS architecture</li>
+              <li>packet visibility design</li>
+              <li>secure remote access</li>
+              <li>documentation-driven infrastructure building</li>
+            </ul>
+            <p>
+              Operationally, it shows an understanding that security infrastructure must be segmented, observable,
+              controllable, explainable, and supportable over time.
+            </p>
+            <p>
+              That is the difference between installing security tools and building a usable security operations environment.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Outcome</div>
+            <h2>Outcome</h2>
+            <p>
+              This project established the technical foundation for the entire SaintValTech SOC portfolio.
+              It created the network, segmentation, monitoring, and visibility architecture required to support
+              later work in identity hardening, hybrid Microsoft security, SOAR automation, TheHive integration,
+              and multi-source incident workflows.
+            </p>
+            <p>
+              More importantly, it demonstrated the ability to design and operate a realistic enterprise-style lab
+              that supports both IT operations and security operations use cases.
+            </p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-card">
+            <div class="muted-label">Project Summary</div>
+            <h3>Quick Overview</h3>
+            <div class="meta-list">
+              <div class="meta-item">
+                <strong>Project Type</strong>
+                <span>SOC / Network Security / SIEM / Infrastructure</span>
+              </div>
+              <div class="meta-item">
+                <strong>Core Platforms</strong>
+                <span>pfSense, Cisco CBS350, Wazuh, Security Onion, Proxmox</span>
+              </div>
+              <div class="meta-item">
+                <strong>Focus Areas</strong>
+                <span>segmentation, visibility, SIEM, IDS, packet monitoring, secure remote access</span>
+              </div>
+              <div class="meta-item">
+                <strong>Status</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Tools &amp; Technologies</div>
+            <h3>Tools Used</h3>
+            <ul>
+              <li>pfSense</li>
+              <li>pfBlockerNG</li>
+              <li>Cisco CBS350</li>
+              <li>VLANs</li>
+              <li>NAT</li>
+              <li>DNS</li>
+              <li>DHCP</li>
+              <li>OpenVPN</li>
+              <li>WireGuard</li>
+              <li>Wazuh</li>
+              <li>Security Onion</li>
+              <li>Zeek</li>
+              <li>Suricata</li>
+              <li>Proxmox</li>
+              <li>Windows Server</li>
+              <li>Windows 10/11</li>
+              <li>Linux / Ubuntu</li>
+              <li>Kali Linux</li>
+              <li>Cloudflare services where applicable in later phases</li>
+            </ul>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Skills Demonstrated</div>
+            <h3>Key Skills</h3>
+            <ul>
+              <li>firewall configuration</li>
+              <li>VLAN segmentation</li>
+              <li>network troubleshooting</li>
+              <li>DNS and DHCP administration</li>
+              <li>IDS / NSM visibility design</li>
+              <li>SIEM integration</li>
+              <li>packet monitoring architecture</li>
+              <li>remote access configuration</li>
+              <li>environment hardening</li>
+              <li>infrastructure documentation</li>
+              <li>security operations lab design</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

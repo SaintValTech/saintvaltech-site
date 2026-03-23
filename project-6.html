@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Source SOAR Integration | SaintValTech</title>
+  <meta
+    name="description"
+    content="SaintValTech project page for Multi-Source SOAR Integration with Sentinel, Security Onion, Wazuh, Shuffle, TheHive, and Cortex."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1100px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .section { padding: 2.8rem 0; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 0.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .side-card,
+    .section-card {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card { margin-bottom: 1.2rem; }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      margin: 0.6rem 0 0 1.2rem;
+      color: var(--muted);
+    }
+
+    li { margin-bottom: 0.55rem; }
+
+    .meta-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    code {
+      color: var(--accent);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero { padding-top: 4.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#certifications">Certifications</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to Projects</a>
+        <div class="eyebrow">SaintValTech Project</div>
+        <h1>Multi-Source SOAR Integration with Sentinel, Security Onion, Wazuh, Shuffle, TheHive, and Cortex</h1>
+        <div class="subtitle">Cross-platform SOC orchestration for alert routing, case management, and modular enrichment</div>
+        <p>
+          This project documents the design and implementation of a multi-source SOAR pipeline that routes
+          security signals from Microsoft Sentinel, Security Onion, and Wazuh into TheHive for analyst triage
+          and case management, while using Azure Logic Apps and Shuffle as orchestration layers and Cortex as
+          the enrichment engine.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">GitHub Repo</a>
+          <a class="btn btn-secondary" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div>
+          <div class="section-card">
+            <div class="muted-label">Objective</div>
+            <h2>Project Objective</h2>
+            <p>
+              The objective of this project was to build a structured SOAR pipeline that could:
+            </p>
+            <ul>
+              <li>ingest incidents from Microsoft Sentinel into TheHive</li>
+              <li>ingest alerts from Wazuh into TheHive through Shuffle</li>
+              <li>route high-risk Security Onion detections into the same downstream workflow</li>
+              <li>apply severity-based routing logic so not every signal becomes a formal case</li>
+              <li>preserve alert-first triage instead of opening a case for every event</li>
+              <li>support deduplication and stable object creation</li>
+              <li>keep orchestration logic outside the SIEM and outside the case platform</li>
+              <li>avoid exposing TheHive API directly to the internet</li>
+              <li>create a reusable backbone for future correlation across cloud, endpoint, and network telemetry</li>
+            </ul>
+            <p>
+              This project was designed to reflect how a real SOC separates detection, orchestration,
+              enrichment, case management, and analyst workflow.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Environment</div>
+            <h2>Environment Overview</h2>
+
+            <h3>Core Platforms</h3>
+            <ul>
+              <li>Microsoft Sentinel for detection and incident generation</li>
+              <li>Azure Logic Apps for Microsoft-native SOAR</li>
+              <li>Security Onion for network detection and high-risk alerts</li>
+              <li>Wazuh for endpoint and SIEM alerting, and as an intermediate alerting layer</li>
+              <li>Shuffle for internal SOAR orchestration</li>
+              <li>TheHive for alert and case management</li>
+              <li>Cortex for enrichment workflows</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Supporting Security Context</h3>
+            <ul>
+              <li>TheHive exposed securely through Cloudflare Tunnel and Cloudflare Access for analyst use</li>
+              <li>internal east-west API communication used for backend platform-to-platform interactions</li>
+              <li>SOC subnet segmentation in place</li>
+              <li>self-signed/internal TLS decisions applied intentionally where appropriate inside the controlled lab</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Architectural Goal</h3>
+            <p>
+              The goal was not just to move alerts between tools. The goal was to build a sane operational model where:
+            </p>
+            <ul>
+              <li>Sentinel handles incidents</li>
+              <li>Security Onion generates high-signal network detections</li>
+              <li>Wazuh acts as both an endpoint alert source and an intermediate alerting layer</li>
+              <li>Shuffle orchestrates internal alert forwarding</li>
+              <li>TheHive stores alerts and cases</li>
+              <li>Cortex enriches objects later</li>
+              <li>analysts work from a clean case-management layer</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Problem Statement</div>
+            <h2>Problem Statement</h2>
+            <p>
+              SOC environments become noisy and unmanageable when every source sends everything directly into a case management
+              platform without decision logic, normalization, or orchestration.
+            </p>
+            <ul>
+              <li>creating a case for every low-value signal</li>
+              <li>duplicating analyst work across tools</li>
+              <li>exposing backend APIs directly for convenience</li>
+              <li>hardcoding routing logic into the wrong layer</li>
+              <li>building enrichment into detection platforms instead of orchestration</li>
+              <li>failing to deduplicate repeated alerts</li>
+              <li>mixing analyst UI exposure with backend API traffic</li>
+              <li>fragmenting endpoint, cloud, and network alerts into separate, disconnected workflows</li>
+            </ul>
+            <p>
+              The project therefore aimed to establish a more mature pattern: route signals intentionally,
+              create alerts first, escalate to cases only when justified, keep orchestration in the SOAR layer,
+              protect the case platform from unnecessary exposure, and consolidate high-signal detections
+              from multiple sources into a shared analyst workflow.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Architecture</div>
+            <h2>Architecture Overview</h2>
+
+            <h3>High-Level Design</h3>
+            <p><strong>Microsoft-native branch</strong></p>
+            <p>
+              Microsoft Sentinel → Azure Logic App → severity decision → TheHive Case API or TheHive Alert API
+            </p>
+
+            <p><strong>Internal SOC telemetry branch</strong></p>
+            <p>
+              Security Onion → high-risk detections → Wazuh → Shuffle → TheHive Alert API
+            </p>
+
+            <p><strong>Direct Wazuh branch</strong></p>
+            <p>
+              Wazuh → JSON webhook → Shuffle → TheHive Alert API
+            </p>
+
+            <p><strong>Enrichment layer</strong></p>
+            <p>
+              TheHive → Cortex analyzers
+            </p>
+
+            <p>
+              High-signal telemetry from multiple sources is normalized and routed into TheHive through controlled
+              orchestration layers, rather than allowing every platform to create cases independently.
+            </p>
+            <p>
+              Decision logic belongs in the <strong>SOAR/orchestration layer</strong>, not in the case platform itself.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Implementation</div>
+            <h2>Core Components Implemented</h2>
+
+            <h3>1. Sentinel to TheHive Integration</h3>
+            <p>
+              The first major workflow connected Microsoft Sentinel incidents to TheHive using Azure Logic Apps.
+            </p>
+            <ul>
+              <li>Trigger: Microsoft Sentinel — When an incident is created or updated</li>
+              <li>supports scheduled analytics rules, NRT rules, Defender-derived incidents, and incident-centric automation</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">2. Severity-Based Routing Logic</h3>
+            <p>
+              A condition was added in the Logic App to decide whether a Sentinel incident should become a
+              <strong>TheHive case</strong> or a <strong>TheHive alert</strong>.
+            </p>
+            <ul>
+              <li><strong>High / Critical</strong> → create <strong>Case</strong> in TheHive</li>
+              <li><strong>Medium / Low / Informational</strong> → create <strong>Alert</strong> in TheHive</li>
+            </ul>
+            <p>
+              This prevents analyst overload and mirrors real-world Tier 1 SOC triage models.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">3. TheHive Case Creation Path</h3>
+            <p>
+              For High and Critical incidents, the Logic App created a case in TheHive using the TheHive Case API.
+            </p>
+            <ul>
+              <li>native case schema used</li>
+              <li>structured metadata included</li>
+              <li>case template support referenced where applicable</li>
+              <li>severity normalized on the TheHive side</li>
+              <li>tagging used to preserve source and automation context</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">4. TheHive Alert Creation Path</h3>
+            <p>
+              For Medium, Low, and Informational incidents, the Logic App created alerts in TheHive instead of cases.
+            </p>
+            <p>
+              This preserved visibility without creating unnecessary formal case objects.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">5. Logic App Execution Reliability</h3>
+            <p>
+              A critical implementation detail involved making sure the Logic App continued collecting evidence and metadata
+              regardless of which branch succeeded or failed.
+            </p>
+            <ul>
+              <li>post-condition actions configured with broad “Run After” settings</li>
+              <li>succeeded</li>
+              <li>failed</li>
+              <li>skipped</li>
+              <li>timed out</li>
+            </ul>
+            <p>
+              This is a production-grade SOAR design pattern and prevents silent workflow termination.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Security Onion and Wazuh Pipeline</div>
+            <h2>Security Onion and Wazuh Alert Pipeline</h2>
+
+            <h3>6. Security Onion Integration Through Wazuh</h3>
+            <p>
+              In addition to direct Wazuh endpoint alerts, selected high-risk detections from Security Onion were routed into
+              the same workflow by forwarding those signals into Wazuh first, then sending them onward to Shuffle and TheHive.
+            </p>
+            <p>
+              This created a unified internal alerting path:
+            </p>
+            <p><strong>Security Onion → Wazuh → Shuffle → TheHive</strong></p>
+
+            <p><strong>Why this design mattered:</strong></p>
+            <ul>
+              <li>avoided exposing Security Onion directly to downstream case-management workflows</li>
+              <li>allowed Wazuh to act as an intermediate alert normalization layer</li>
+              <li>preserved a single orchestration path into Shuffle</li>
+              <li>reduced fragmentation between endpoint and network-driven alerts</li>
+              <li>made it easier to consolidate high-signal detections into TheHive for analyst triage</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">7. Wazuh Alert Ingestion Objective</h3>
+            <p>
+              The second major workflow focused on forwarding Wazuh alerts into TheHive using Shuffle as an internal SOAR layer.
+            </p>
+            <ul>
+              <li>Wazuh should not write directly to TheHive</li>
+              <li>Shuffle should serve as the orchestrator</li>
+              <li>TheHive should receive alerts, not immediate cases</li>
+              <li>deduplication should be preserved</li>
+              <li>backend API communication should stay internal</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">8. Final Architecture for Internal SOC Branch</h3>
+            <p>
+              Security Onion → selected high-risk alerts → Wazuh → JSON webhook → Shuffle (self-hosted Orborus runtime)
+              → HTTP POST → TheHive Alert API
+            </p>
+            <p>
+              Wazuh endpoint detections also followed the same downstream pattern into Shuffle and TheHive.
+            </p>
+            <ul>
+              <li>Shuffle is the only orchestrator in this branch</li>
+              <li>TheHive receives alerts first</li>
+              <li>Cloudflare exposure is for UI access, not backend API traffic</li>
+              <li>all backend integration remains internal to the SOC subnet</li>
+              <li>Security Onion network detections and Wazuh endpoint detections converge into a shared analyst workflow</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Troubleshooting</div>
+            <h2>Runtime Troubleshooting and Remediation</h2>
+
+            <h3>9. Initial Runtime Problem</h3>
+            <p>
+              Although API design and authentication appeared correct, the Shuffle workflow initially failed in a misleading way.
+            </p>
+            <ul>
+              <li>HTTP actions hung indefinitely</li>
+              <li>executions were aborted by the cleanup bot</li>
+              <li>direct <code>curl</code> and <code>wget</code> from the host succeeded</li>
+              <li>API calls from within Shuffle failed</li>
+            </ul>
+            <p>
+              This made the issue appear at first like bad API authentication, Cloudflare interference,
+              TheHive API failure, or a TLS issue.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">10. Root Cause: Orborus Proxy Inheritance</h3>
+            <p>
+              The actual cause was that the Shuffle Orborus runtime inherited a default HTTP proxy setting.
+            </p>
+            <ul>
+              <li>all outbound HTTP traffic from Shuffle was routed to a non-existent proxy</li>
+              <li>API calls hung</li>
+              <li>execution behavior failed</li>
+              <li>cleanup termination occurred</li>
+            </ul>
+            <p>
+              This is a classic SOAR troubleshooting reality:
+              <strong>workflow logic can be correct while the automation runtime is broken.</strong>
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">11. Runtime Remediation</h3>
+            <p>
+              The Orborus container was recreated with proxy environment variables explicitly disabled.
+            </p>
+            <ul>
+              <li>no invalid upstream proxy</li>
+              <li>correct internal east-west API communication</li>
+              <li>successful HTTP actions to TheHive</li>
+              <li>stable execution path</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">12. Direct API Validation Before SOAR Execution</h3>
+            <p>
+              Before trusting Shuffle again, the TheHive Alert API was validated directly using a manual <code>curl</code> request.
+            </p>
+            <ul>
+              <li>TheHive API was reachable</li>
+              <li>API credentials were valid</li>
+              <li>the internal network path was correct</li>
+              <li>the failure was not caused by TheHive</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">13. Final Shuffle Workflow Design</h3>
+            <p>
+              The final Shuffle workflow was intentionally minimal.
+            </p>
+            <p><strong>Workflow model:</strong></p>
+            <p>Webhook → HTTP POST to TheHive Alert API</p>
+            <ul>
+              <li><code>sourceRef</code> used for deduplication</li>
+              <li>mapped execution fields used instead of raw pasted JSON</li>
+              <li>alert metadata normalized for TheHive</li>
+              <li>source and tagging preserved for later analyst context</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">TLS and Trust Decision</div>
+            <h2>TLS and Internal Trust Decision</h2>
+            <p>
+              For some east-west internal SOAR communications, certificate verification was relaxed intentionally due to the
+              environment being a tightly controlled internal SOC subnet.
+            </p>
+            <p>
+              This was not an accidental weakness. It was a documented risk decision.
+            </p>
+            <p>
+              TLS encryption was preserved for internal SOAR communications, but strict certificate verification was relaxed
+              in a fully controlled private environment with segmentation, firewall rules, and monitoring in place.
+            </p>
+            <ul>
+              <li>communication remains internal</li>
+              <li>systems are inside the SOC VLAN</li>
+              <li>attack surface is constrained</li>
+              <li>the risk decision is intentional and documented</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Relationship to Cortex</div>
+            <h2>Cortex Role in the Architecture</h2>
+            <p>
+              Cortex was positioned as the enrichment engine, not as the routing engine.
+            </p>
+            <ul>
+              <li>routing belongs in Logic Apps, Shuffle, and orchestration logic</li>
+              <li>enrichment belongs in Cortex analyzers</li>
+              <li>used later in analyst workflows and post-alert / post-case processing</li>
+            </ul>
+            <p>
+              This keeps the design modular and operationally sane.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Correlation Value</div>
+            <h2>Future Expansion and Correlation Value</h2>
+            <p>
+              The architecture was intentionally designed to support correlation across:
+            </p>
+            <ul>
+              <li>cloud detections from Sentinel</li>
+              <li>endpoint detections from Wazuh</li>
+              <li>network detections from Security Onion</li>
+            </ul>
+            <p>
+              By routing these sources into TheHive through controlled workflows, the project created a path toward:
+            </p>
+            <ul>
+              <li>shared alert triage</li>
+              <li>later enrichment with Cortex</li>
+              <li>analyst-driven escalation</li>
+              <li>future case correlation across telemetry types</li>
+            </ul>
+            <p>
+              This is what makes the design a <strong>multi-source SOAR integration project</strong>,
+              not just a set of disconnected point-to-point integrations.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Validation</div>
+            <h2>Validation &amp; Results</h2>
+
+            <h3>17. Sentinel Branch Validation</h3>
+            <ul>
+              <li>Sentinel incidents created</li>
+              <li>severity routing worked</li>
+              <li>High/Critical incidents created cases</li>
+              <li>lower-severity incidents created alerts</li>
+              <li>no duplicate object sprawl from the core design</li>
+              <li>Logic App executions completed successfully</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">18. Internal SOC Branch Validation</h3>
+            <ul>
+              <li>Wazuh alerts reached Shuffle</li>
+              <li>Shuffle created TheHive alerts successfully</li>
+              <li>HTTP POST returned successful creation behavior</li>
+              <li>alerts appeared in TheHive</li>
+              <li>deduplication worked as intended</li>
+              <li>reruns did not create unnecessary duplicates</li>
+              <li>Security Onion high-risk alerts could be routed into the same downstream workflow through Wazuh</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">19. Operational Validation</h3>
+            <p>
+              The combined design proved that:
+            </p>
+            <ul>
+              <li>case routing logic works</li>
+              <li>internal API orchestration works</li>
+              <li>runtime debugging matters</li>
+              <li>TheHive can act as the central analyst workspace</li>
+              <li>multiple telemetry sources can feed a common triage layer without collapsing into chaos</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Challenges</div>
+            <h2>Challenges Encountered</h2>
+            <ul>
+              <li>routing logic complexity: deciding what becomes a case and what remains an alert</li>
+              <li>avoiding duplication while preserving analyst usability</li>
+              <li>distinguishing runtime failures from logic failures</li>
+              <li>keeping tool roles separate instead of letting one platform do everything</li>
+            </ul>
+            <p>
+              A mature design required resisting the temptation to let one tool do everything.
+            </p>
+            <ul>
+              <li>Sentinel detects and generates incidents</li>
+              <li>Security Onion generates high-risk network detections</li>
+              <li>Wazuh acts as endpoint telemetry and an intermediate alerting layer</li>
+              <li>Shuffle orchestrates internal alert forwarding</li>
+              <li>Logic Apps orchestrate Microsoft-native flows</li>
+              <li>TheHive stores and manages analyst objects</li>
+              <li>Cortex enriches</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Value</div>
+            <h2>Security &amp; Operational Value</h2>
+            <p>
+              This project demonstrates practical capability in:
+            </p>
+            <ul>
+              <li>SOAR pipeline design</li>
+              <li>cross-platform alert routing</li>
+              <li>Sentinel-to-TheHive integration</li>
+              <li>Security Onion-to-Wazuh-to-TheHive integration</li>
+              <li>Wazuh-to-TheHive orchestration</li>
+              <li>Logic App condition design</li>
+              <li>Shuffle runtime troubleshooting</li>
+              <li>API validation and testing</li>
+              <li>alert-vs-case triage strategy</li>
+              <li>deduplication design</li>
+              <li>controlled internal trust decisions</li>
+              <li>modular SOC workflow architecture</li>
+            </ul>
+            <p>
+              Operationally, this project matters because it moves beyond isolated tooling and creates an integrated
+              analyst workflow model. Instead of forcing analysts to jump between multiple platforms with duplicated signals,
+              the design centralizes triage and case handling while preserving separation between detection and orchestration.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Outcome</div>
+            <h2>Outcome</h2>
+            <p>
+              This project successfully established a multi-source SOAR integration model in which Microsoft Sentinel,
+              Security Onion, and Wazuh can all feed TheHive through appropriate orchestration layers, while preserving
+              alert-first triage, severity-based escalation, deduplication, and modular enrichment design.
+            </p>
+            <p>
+              It also documented key operational lessons around runtime troubleshooting, internal API design, and the
+              separation of detection, orchestration, and case management responsibilities.
+            </p>
+            <p>
+              The resulting architecture is extensible, operationally realistic, and well positioned for future enrichment,
+              correlation, and response automation across cloud, endpoint, and network telemetry sources.
+            </p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-card">
+            <div class="muted-label">Project Summary</div>
+            <h3>Quick Overview</h3>
+            <div class="meta-list">
+              <div class="meta-item">
+                <strong>Project Type</strong>
+                <span>SOAR / Cross-Platform Integration / Case Management</span>
+              </div>
+              <div class="meta-item">
+                <strong>Core Platforms</strong>
+                <span>Microsoft Sentinel, Security Onion, Wazuh, Shuffle, TheHive, Cortex</span>
+              </div>
+              <div class="meta-item">
+                <strong>Focus Areas</strong>
+                <span>alert routing, orchestration, case-vs-alert logic, deduplication, modular analyst workflow</span>
+              </div>
+              <div class="meta-item">
+                <strong>Status</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Tools &amp; Technologies</div>
+            <h3>Tools Used</h3>
+            <ul>
+              <li>Microsoft Sentinel</li>
+              <li>Azure Logic Apps</li>
+              <li>Security Onion</li>
+              <li>Wazuh</li>
+              <li>Shuffle</li>
+              <li>TheHive</li>
+              <li>Cortex</li>
+              <li>Cloudflare-secured TheHive UI exposure</li>
+              <li>HTTP APIs</li>
+              <li>webhook ingestion</li>
+              <li>internal TLS / self-signed lab trust decisions</li>
+            </ul>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Skills Demonstrated</div>
+            <h3>Key Skills</h3>
+            <ul>
+              <li>SOAR architecture design</li>
+              <li>SIEM-to-case-platform integration</li>
+              <li>workflow routing logic</li>
+              <li>Logic App implementation</li>
+              <li>Shuffle orchestration</li>
+              <li>API troubleshooting</li>
+              <li>deduplication planning</li>
+              <li>analyst workflow design</li>
+              <li>cross-platform integration</li>
+              <li>enterprise-style documentation</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain Controller Hardening &amp; Hybrid Identity Foundation | SaintValTech</title>
+  <meta
+    name="description"
+    content="SaintValTech project page for Domain Controller Hardening & Hybrid Identity Foundation."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1100px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .section {
+      padding: 2.8rem 0;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 0.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .side-card,
+    .section-card {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card {
+      margin-bottom: 1.2rem;
+    }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      margin: 0.6rem 0 0 1.2rem;
+      color: var(--muted);
+    }
+
+    li {
+      margin-bottom: 0.55rem;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 4.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#certifications">Certifications</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to Projects</a>
+        <div class="eyebrow">SaintValTech Project</div>
+        <h1>Domain Controller Hardening &amp; Hybrid Identity Foundation</h1>
+        <div class="subtitle">Tier-0 identity hardening, audit visibility, and Microsoft Entra integration for a secure hybrid environment</div>
+        <p>
+          This project documents the hardening of a Windows Server Domain Controller and the extension
+          of that identity core into Microsoft Entra ID through Azure AD Connect Sync and Hybrid Azure AD Join.
+          The goal was to build a secure, enterprise-style identity foundation for the broader SOC lab while
+          ensuring strong authentication controls, audit-grade logging, and cloud identity readiness.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">GitHub Repo</a>
+          <a class="btn btn-secondary" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div>
+          <div class="section-card">
+            <div class="muted-label">Objective</div>
+            <h2>Project Objective</h2>
+            <p>
+              The objective of this project was to build and secure the identity core of the environment
+              so it could safely support:
+            </p>
+            <ul>
+              <li>enterprise Active Directory operations</li>
+              <li>Tier-0 security controls</li>
+              <li>audit-grade authentication logging</li>
+              <li>hybrid identity synchronization with Microsoft Entra ID</li>
+              <li>Hybrid Azure AD Join</li>
+              <li>Microsoft Defender for Endpoint onboarding readiness</li>
+              <li>identity-aware Zero Trust architecture</li>
+              <li>later SIEM, SOAR, and IR integrations</li>
+            </ul>
+            <p>
+              This project was designed to ensure that the SOC lab had a hardened and explainable identity plane
+              rather than an insecure default domain build.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Environment</div>
+            <h2>Environment Overview</h2>
+
+            <h3>Domain Controller Role</h3>
+            <ul>
+              <li><strong>Hostname:</strong> CORP-DC01</li>
+              <li><strong>Domain:</strong> corp.saintvaltech.com</li>
+              <li><strong>Role:</strong> Primary Domain Controller</li>
+              <li><strong>Security Tier:</strong> Tier-0</li>
+              <li><strong>Organizational Unit:</strong> 01 - Domain Controllers</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Identity Role in the Lab</h3>
+            <p>
+              The domain controller was the trust anchor for the broader environment and served as the foundation for:
+            </p>
+            <ul>
+              <li>Active Directory identity services</li>
+              <li>Kerberos-based authentication</li>
+              <li>centralized account policy enforcement</li>
+              <li>advanced audit generation for SIEM</li>
+              <li>Microsoft Entra synchronization</li>
+              <li>Hybrid Azure AD Join</li>
+              <li>Microsoft Defender and Sentinel readiness</li>
+              <li>future identity-aware automation and access control</li>
+            </ul>
+
+            <p>
+              This made the domain controller one of the most security-sensitive assets in the entire environment.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Architecture</div>
+            <h2>Architecture Role</h2>
+            <p>
+              The domain controller was positioned as the identity core of the SOC and enterprise lab.
+              It was not treated as a generic server. It was treated as a Tier-0 system whose hardening
+              decisions directly affect authentication trust, audit integrity, and downstream security operations.
+            </p>
+
+            <h3>Design Principles</h3>
+            <ul>
+              <li>harden authentication protocols</li>
+              <li>minimize legacy trust paths</li>
+              <li>increase audit visibility</li>
+              <li>protect privileged access boundaries</li>
+              <li>enforce defensive defaults via GPO</li>
+              <li>prepare for hybrid identity integration</li>
+              <li>support future Microsoft security stack onboarding</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Implementation</div>
+            <h2>Core Components Implemented</h2>
+
+            <h3>1. Domain Controller Security Baseline GPO</h3>
+            <p>
+              A dedicated GPO was created and linked to the Domain Controllers OU to enforce a consistent hardening baseline.
+            </p>
+            <ul>
+              <li><strong>GPO Name:</strong> GPO - Domain Controller Security Baseline</li>
+              <li><strong>Linked To:</strong> 01 - Domain Controllers</li>
+              <li><strong>Scope:</strong> Computer Configuration only</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">2. Kerberos Hardening</h3>
+            <p>Kerberos policy was hardened to align with enterprise defensive standards and reduce weak authentication conditions.</p>
+            <ul>
+              <li>Enforce user logon restrictions → Enabled</li>
+              <li>Maximum lifetime for service ticket → 600 minutes</li>
+              <li>Maximum lifetime for user ticket → 10 hours</li>
+              <li>Maximum lifetime for user ticket renewal → 7 days</li>
+              <li>Maximum tolerance for computer clock synchronization → 5 minutes</li>
+            </ul>
+            <p>
+              Validation included <code>klist</code> to confirm expected ticket behavior and strong Kerberos usage.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">3. NTLM Hardening</h3>
+            <p>Legacy NTLM exposure was reduced significantly through local security policy controls.</p>
+            <ul>
+              <li>LAN Manager authentication level → Send NTLMv2 response only. Refuse LM &amp; NTLM</li>
+              <li>Restrict NTLM: Incoming NTLM traffic → Deny all accounts</li>
+              <li>Restrict NTLM: Outgoing NTLM traffic → Deny all servers</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">4. LDAP Signing Enforcement</h3>
+            <p>
+              LDAP signing was required to prevent insecure directory communication.
+            </p>
+            <ul>
+              <li>Domain controller: LDAP server signing requirements → Require signing</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">5. SMB Hardening</h3>
+            <p>SMB security settings were enforced to require signed communications and reduce protocol abuse.</p>
+            <ul>
+              <li>Microsoft network client: Digitally sign communications (always) → Enabled</li>
+              <li>Microsoft network client: Digitally sign communications (if server agrees) → Disabled</li>
+              <li>Microsoft network server: Digitally sign communications (always) → Enabled</li>
+              <li>Microsoft network server: Digitally sign communications (if client agrees) → Disabled</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">6. Advanced Audit Policy Configuration</h3>
+            <p>
+              Advanced audit policies were enabled to ensure high-fidelity security telemetry for SIEM and incident investigation.
+            </p>
+            <ul>
+              <li>Account Logon</li>
+              <li>Logon/Logoff</li>
+              <li>Account Management</li>
+              <li>DS Access</li>
+              <li>Object Access</li>
+              <li>Privilege Use</li>
+              <li>Policy Change</li>
+            </ul>
+            <p>
+              Validation included <code>auditpol /get /category:*</code>.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">7. PowerShell Logging</h3>
+            <p>
+              PowerShell logging was enabled to improve script visibility and support detection of administrative or malicious scripting activity.
+            </p>
+            <ul>
+              <li>Turn on PowerShell Script Block Logging → Enabled</li>
+              <li>Log script block invocation start/stop events → Enabled</li>
+              <li>Turn on Module Logging → Enabled</li>
+              <li>Included modules → *</li>
+              <li>Turn on PowerShell Transcription → Enabled</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">8. User Rights Assignment / Tier-0 Lockdown</h3>
+            <p>
+              User rights were restricted to reduce unnecessary local and remote administrative pathways.
+            </p>
+            <ul>
+              <li>Allow log on locally → Administrators only</li>
+              <li>Allow log on through Remote Desktop Services → Administrators only</li>
+              <li>Deny log on locally → Guests, Local account</li>
+              <li>Deny log on through Remote Desktop Services → Guests, Local account, Local account and member of Administrators group</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">9. Windows Defender Firewall Baseline</h3>
+            <p>
+              The Domain Profile was configured with secure defaults.
+            </p>
+            <ul>
+              <li>Firewall state → On</li>
+              <li>Inbound connections → Block by default</li>
+              <li>Outbound connections → Allow by default</li>
+              <li>Log dropped packets → Yes</li>
+              <li>Log successful connections → Yes</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">10. Azure AD Connect Sync</h3>
+            <p>
+              Once the domain controller baseline was stable, the identity environment was extended into Microsoft Entra ID.
+            </p>
+            <ul>
+              <li>verified AD forest readiness</li>
+              <li>validated Microsoft 365 tenant configuration</li>
+              <li>installed Azure AD Connect using Express Mode</li>
+              <li>enabled Password Hash Sync</li>
+              <li>enabled Seamless SSO</li>
+              <li>resolved browser authentication issues with alternate browser configuration</li>
+              <li>triggered initial synchronization</li>
+              <li>verified successful user sync into Entra ID</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">11. Hybrid Azure AD Join</h3>
+            <p>
+              After sync validation, Hybrid Azure AD Join was configured using Microsoft Entra Connect Sync.
+            </p>
+            <ul>
+              <li>selected forest in Entra Connect</li>
+              <li>configured Hybrid Microsoft Entra ID Join</li>
+              <li>completed SCP configuration</li>
+              <li>validated registration status on the domain controller</li>
+            </ul>
+            <p>
+              Validation included <code>dsregcmd /status</code> to confirm both domain join and Azure AD join state.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Validation</div>
+            <h2>Validation &amp; Verification</h2>
+            <p>
+              The hardening baseline was validated using multiple system and policy checks.
+            </p>
+            <ul>
+              <li><code>gpupdate /force</code></li>
+              <li><code>gpresult /r</code></li>
+              <li><code>auditpol /get /category:*</code></li>
+              <li><code>klist</code></li>
+              <li>registry queries for LDAP, NTLM, and SMB</li>
+              <li>PowerShell logging policy checks</li>
+              <li><code>Get-ADSyncScheduler</code></li>
+              <li><code>Start-ADSyncSyncCycle -PolicyType Initial</code></li>
+              <li><code>dsregcmd /status</code></li>
+            </ul>
+            <p>
+              These checks confirmed that the GPO was applied correctly, the expected protocol and logging settings were active,
+              and the on-prem to cloud identity path was functioning as intended.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Challenges</div>
+            <h2>Challenges Encountered</h2>
+
+            <h3>Authentication Flow and Sync Complexity</h3>
+            <p>
+              Hybrid identity is not a single-click process in practice. It required forest validation, tenant verification,
+              sync scheduling checks, troubleshooting Azure AD Connect browser login behavior, and ensuring domain and UPN alignment.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Security vs Compatibility Decisions</h3>
+            <p>
+              Tightening NTLM, LDAP, and SMB security requires awareness of compatibility impact.
+              These settings had to be chosen deliberately to avoid weakening the Tier-0 design while still supporting intended lab operations.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Tier-0 Documentation Burden</h3>
+            <p>
+              Because the domain controller supports future security tooling, its configuration had to be documented carefully enough
+              that later Defender, Sentinel, and SOAR work could rely on it confidently.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Value</div>
+            <h2>Security &amp; Operational Value</h2>
+            <p>
+              This project demonstrates practical capability in:
+            </p>
+            <ul>
+              <li>Active Directory hardening</li>
+              <li>Kerberos and NTLM security controls</li>
+              <li>LDAP and SMB security enforcement</li>
+              <li>advanced audit policy design</li>
+              <li>PowerShell logging for detection visibility</li>
+              <li>Tier-0 administrative restriction</li>
+              <li>Windows firewall baseline configuration</li>
+              <li>Azure AD Connect deployment</li>
+              <li>Hybrid Azure AD Join validation</li>
+              <li>identity-focused troubleshooting and verification</li>
+            </ul>
+            <p>
+              Operationally, this project matters because a SOC environment is only as trustworthy as its identity core.
+              By hardening the domain controller and extending it into hybrid identity, the environment gained stronger
+              authentication assurance, better audit telemetry, reduced legacy protocol risk, and readiness for Defender and Sentinel.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Outcome</div>
+            <h2>Outcome</h2>
+            <p>
+              This project transformed the domain controller from a basic lab system into a hardened Tier-0 identity platform
+              with hybrid cloud integration. It established the authentication, auditing, and identity trust foundation required
+              for the rest of the SaintValTech SOC portfolio.
+            </p>
+            <p>
+              It also created the conditions necessary for later onboarding of Microsoft Defender for Endpoint,
+              Microsoft Sentinel workflows, Zero Trust access models, and identity-aware automation across the lab.
+            </p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-card">
+            <div class="muted-label">Project Summary</div>
+            <h3>Quick Overview</h3>
+            <div class="meta-list">
+              <div class="meta-item">
+                <strong>Project Type</strong>
+                <span>Identity Security / Active Directory / Hybrid Identity</span>
+              </div>
+              <div class="meta-item">
+                <strong>Core Platforms</strong>
+                <span>Windows Server, Active Directory, Group Policy, Azure AD Connect, Microsoft Entra ID</span>
+              </div>
+              <div class="meta-item">
+                <strong>Focus Areas</strong>
+                <span>Tier-0 hardening, authentication security, audit visibility, hybrid identity</span>
+              </div>
+              <div class="meta-item">
+                <strong>Status</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Tools &amp; Technologies</div>
+            <h3>Tools Used</h3>
+            <ul>
+              <li>Windows Server</li>
+              <li>Active Directory Domain Services</li>
+              <li>Group Policy Management</li>
+              <li>Kerberos</li>
+              <li>NTLM policy controls</li>
+              <li>LDAP signing</li>
+              <li>SMB signing</li>
+              <li>Windows Defender Firewall</li>
+              <li>PowerShell logging</li>
+              <li>Azure AD Connect</li>
+              <li>Microsoft Entra ID</li>
+              <li>Hybrid Azure AD Join</li>
+              <li>Microsoft 365 tenant services</li>
+            </ul>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Skills Demonstrated</div>
+            <h3>Key Skills</h3>
+            <ul>
+              <li>Active Directory administration</li>
+              <li>domain controller hardening</li>
+              <li>Group Policy design</li>
+              <li>authentication security tuning</li>
+              <li>hybrid identity setup</li>
+              <li>cloud synchronization validation</li>
+              <li>logging and audit policy configuration</li>
+              <li>Windows security baseline implementation</li>
+              <li>identity troubleshooting</li>
+              <li>enterprise documentation</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

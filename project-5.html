@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero Trust Exposure of TheHive | SaintValTech</title>
+  <meta
+    name="description"
+    content="SaintValTech project page for Zero Trust Exposure of TheHive Using Cloudflare Tunnel, Access, and Microsoft Entra ID."
+  />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121a30;
+      --card: #11182b;
+      --card-2: #17213b;
+      --text: #e8edf7;
+      --muted: #b3bfd6;
+      --line: #253252;
+      --primary: #4ea1ff;
+      --primary-dark: #2b7fe0;
+      --accent: #8ec5ff;
+      --success: #8ff0c8;
+      --max-width: 1100px;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(78, 161, 255, 0.08), transparent 25%),
+        linear-gradient(180deg, #0b1020 0%, #0b1020 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 16, 32, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(78, 161, 255, 0.25);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(78, 161, 255, 0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      font-size: 1.08rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.8rem 1.15rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--accent);
+    }
+
+    .section { padding: 2.8rem 0; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 0.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .side-card,
+    .section-card {
+      background: linear-gradient(180deg, rgba(23, 33, 59, 0.95), rgba(17, 24, 43, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card { margin-bottom: 1.2rem; }
+
+    .muted-label {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      margin: 0.6rem 0 0 1.2rem;
+      color: var(--muted);
+    }
+
+    li { margin-bottom: 0.55rem; }
+
+    .meta-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 0 3rem;
+      margin-top: 2rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    code {
+      color: var(--accent);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero { padding-top: 4.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">SaintValTech</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#certifications">Certifications</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to Projects</a>
+        <div class="eyebrow">SaintValTech Project</div>
+        <h1>Zero Trust Exposure of TheHive Using Cloudflare Tunnel, Access, and Microsoft Entra ID</h1>
+        <div class="subtitle">Securely publishing TheHive without inbound firewall exposure using Cloudflare Zero Trust and Microsoft identity</div>
+        <p>
+          This project documents the secure external exposure of TheHive, the case management and incident response
+          platform used in the SaintValTech SOC lab, without opening inbound firewall ports or relying on traditional
+          NAT-based publishing. Instead of exposing TheHive through direct port forwarding, the platform was published
+          using Cloudflare Tunnel and protected with Cloudflare Access backed by Microsoft Entra ID and MFA.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">GitHub Repo</a>
+          <a class="btn btn-secondary" href="index.html#contact">Contact</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div>
+          <div class="section-card">
+            <div class="muted-label">Objective</div>
+            <h2>Project Objective</h2>
+            <p>
+              The objective of this project was to securely expose TheHive to authorized users without weakening
+              the network security posture of the SOC environment.
+            </p>
+            <p>
+              Specifically, the project aimed to:
+            </p>
+            <ul>
+              <li>eliminate inbound port forwarding for TheHive</li>
+              <li>avoid public IP exposure of the platform</li>
+              <li>enforce identity-aware access controls before application login</li>
+              <li>integrate access authentication with Microsoft Entra ID</li>
+              <li>require MFA at the access perimeter</li>
+              <li>preserve TheHive’s placement inside a protected SOC subnet</li>
+              <li>create a cleaner and more defensible architecture than traditional reverse proxy or NAT exposure</li>
+            </ul>
+            <p>
+              TheHive also needed to support secure integration with <strong>Microsoft Sentinel SOAR workflows</strong>,
+              enabling Logic Apps to send incident and alert data into TheHive as part of the broader case management pipeline.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Environment</div>
+            <h2>Environment Overview</h2>
+
+            <h3>Platform Being Exposed</h3>
+            <ul>
+              <li><strong>Application:</strong> TheHive</li>
+              <li><strong>Role:</strong> SOC case management and incident response platform</li>
+              <li><strong>Function in lab:</strong> central analyst workspace for alerts, cases, and workflow coordination</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Internal Placement</h3>
+            <p>
+              TheHive was deployed inside a hardened SIEM / SOC subnet behind pfSense with strict segmentation
+              and no requirement for direct public inbound access.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Supporting Components</h3>
+            <ul>
+              <li>pfSense as edge firewall</li>
+              <li>Cloudflare Tunnel (cloudflared) for outbound-only service publication</li>
+              <li>Cloudflare Access for Zero Trust access enforcement</li>
+              <li>Microsoft Entra ID for identity and MFA</li>
+              <li>Cloudflare DNS for public hostname handling</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">Protected Hostname</h3>
+            <ul>
+              <li><code>thehive.saintvaltech.com</code></li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Problem Statement</div>
+            <h2>Problem Statement</h2>
+            <p>
+              Initial attempts to expose TheHive through traditional methods introduced complexity and unnecessary risk.
+            </p>
+
+            <h3>Problems with Traditional Exposure</h3>
+            <ul>
+              <li>required inbound WAN port forwarding</li>
+              <li>introduced NAT and firewall troubleshooting complexity</li>
+              <li>increased attack surface</li>
+              <li>created edge cases around DNS rebinding and reverse path behavior</li>
+              <li>complicated certificate and HTTPS handling</li>
+              <li>conflicted with pfSense hardening and non-standard management port configuration</li>
+              <li>made the architecture harder to explain in a modern SOC context</li>
+            </ul>
+
+            <p>
+              The platform needed to be accessible to authorized analysts while preserving the integrity of the SOC subnet
+              and avoiding unnecessary exposure at the network edge.
+            </p>
+
+            <p>
+              In addition, TheHive needed to be reachable in a secure and reliable way for
+              <strong>Microsoft Sentinel SOAR workflows</strong>, allowing Logic Apps to forward incidents and alerts
+              into TheHive without relying on traditional inbound firewall exposure or fragile NAT-based publishing.
+            </p>
+
+            <p>
+              This led to the decision to replace traditional exposure with a <strong>Zero Trust publication model</strong>.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Design Decision</div>
+            <h2>Why Cloudflare Tunnel Was Chosen</h2>
+            <p>
+              Cloudflare Tunnel was selected because it allowed TheHive to be published through
+              <strong>outbound-only connectivity</strong> from the internal host to Cloudflare,
+              eliminating the need for inbound firewall openings.
+            </p>
+
+            <h3>Benefits of This Design</h3>
+            <ul>
+              <li>no public IP exposure of TheHive</li>
+              <li>no WAN port forwarding</li>
+              <li>no NAT rules</li>
+              <li>no NAT reflection problems</li>
+              <li>no inbound firewall exceptions required</li>
+              <li>TLS handled through Cloudflare edge services</li>
+              <li>access controlled before the application is reached</li>
+              <li>better alignment with Zero Trust and MSSP-grade access patterns</li>
+            </ul>
+
+            <p>
+              Security philosophy: the platform should be reachable, but not directly exposed.
+              Access control should happen at the identity and edge layer before the application itself is presented.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Architecture</div>
+            <h2>Final Architecture</h2>
+
+            <h3>High-Level Flow</h3>
+            <p>
+              User browser → Cloudflare Edge over HTTPS → Cloudflare Access policy → Cloudflare Tunnel
+              → cloudflared running on TheHive VM → TheHive bound to localhost
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Security Properties of the Final Design</h3>
+            <ul>
+              <li>no inbound traffic reaches pfSense for this application</li>
+              <li>TheHive is not bound to LAN or WAN interfaces</li>
+              <li>access is mediated by Cloudflare Access</li>
+              <li>authentication is handled by Microsoft Entra ID</li>
+              <li>MFA is enforced before the application is reached</li>
+              <li>TheHive remains inside the SOC subnet and hidden from direct exposure</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Implementation</div>
+            <h2>Core Components Implemented</h2>
+
+            <h3>1. TheHive Localhost Binding</h3>
+            <p>
+              The first hardening step was to ensure TheHive was not directly reachable from the network.
+            </p>
+            <ul>
+              <li><code>play.server.http.address = "127.0.0.1"</code></li>
+              <li><code>play.server.http.port = 9000</code></li>
+            </ul>
+            <p>
+              This guaranteed that TheHive could not be reached directly over LAN or WAN and that Cloudflare Tunnel
+              became the only intended access path.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">2. Cloudflare Tunnel Installation</h3>
+            <p>
+              <code>cloudflared</code> was installed on the TheHive host to act as the outbound tunnel client.
+            </p>
+            <p>
+              This created and maintained the secure outbound tunnel between the internal TheHive VM and Cloudflare’s edge network.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">3. Cloudflare Tunnel Authentication and Creation</h3>
+            <p>
+              The tunnel client was authenticated with Cloudflare and a dedicated tunnel was created for the service.
+            </p>
+            <ul>
+              <li>authenticated cloudflared with Cloudflare account</li>
+              <li>created a tunnel for TheHive</li>
+              <li>generated tunnel credentials</li>
+              <li>stored tunnel metadata securely on the host</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">4. Tunnel Configuration</h3>
+            <p>
+              A tunnel configuration file mapped the external hostname to the internal local service.
+            </p>
+            <ul>
+              <li>tunnel name / ID</li>
+              <li>credentials file reference</li>
+              <li>ingress rule for <code>thehive.saintvaltech.com</code></li>
+              <li>service target pointing to <code>http://127.0.0.1:9000</code></li>
+              <li>fallback HTTP 404 route</li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">5. DNS Routing Through Tunnel</h3>
+            <p>
+              The existing traditional DNS model was replaced with Cloudflare-managed tunnel routing.
+              Cloudflare DNS now resolves the public TheHive hostname to the Cloudflare Tunnel route rather than
+              to a public IP or manually forwarded service.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">6. Tunnel as a Persistent Service</h3>
+            <p>
+              Cloudflared was installed and enabled as a system service to ensure the tunnel starts automatically,
+              survives reboots, and behaves like a production service.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Zero Trust Access</div>
+            <h2>Zero Trust Access Control</h2>
+
+            <h3>7. Cloudflare Access Application</h3>
+            <p>
+              Once the tunnel path existed, Cloudflare Access was used to enforce identity-aware access controls.
+            </p>
+            <ul>
+              <li>application type: self-hosted</li>
+              <li>protected application URL: <code>thehive.saintvaltech.com</code></li>
+            </ul>
+
+            <h3 style="margin-top: 1.2rem;">8. Microsoft Entra ID Integration</h3>
+            <p>
+              Microsoft Entra ID was configured as the identity provider for Cloudflare Access.
+              Users attempting to access TheHive are redirected through Microsoft identity authentication before access is granted.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">9. Access Policy Enforcement</h3>
+            <p>
+              Cloudflare Access policy was configured to restrict access based on organizational identity and authentication requirements.
+            </p>
+            <ul>
+              <li>allow only approved SaintValTech identities</li>
+              <li>require OTP / MFA or equivalent strong authentication</li>
+            </ul>
+
+            <p>
+              This creates layered control:
+            </p>
+            <ul>
+              <li>identity verification at Cloudflare</li>
+              <li>MFA enforcement</li>
+              <li>application authentication inside TheHive</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Authentication Flow</div>
+            <h2>Authentication Flow</h2>
+            <p>
+              Final login flow:
+            </p>
+            <p>
+              User → <code>thehive.saintvaltech.com</code> → Cloudflare Access → Microsoft Entra ID → MFA
+              → session grant from Cloudflare → TheHive login page → TheHive application authentication
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Separation of Duties</h3>
+            <ul>
+              <li><strong>Microsoft Entra ID</strong> → identity and MFA</li>
+              <li><strong>Cloudflare Access</strong> → perimeter access enforcement</li>
+              <li><strong>TheHive</strong> → application-level authorization and use</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Validation</div>
+            <h2>Validation &amp; Testing</h2>
+
+            <h3>External Access Validation</h3>
+            <ul>
+              <li>phone / cellular network access</li>
+              <li>external browser access from outside the LAN</li>
+            </ul>
+            <p>
+              Result: TheHive was reachable externally without any public inbound exposure of the internal service host.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Internal Access Validation</h3>
+            <p>
+              Internal access was also validated where appropriate to ensure the solution worked cleanly through the intended hostname and access flow.
+            </p>
+
+            <h3 style="margin-top: 1.2rem;">Security Validation</h3>
+            <ul>
+              <li>no WAN ports opened for TheHive</li>
+              <li>no NAT rules required</li>
+              <li>no public IP exposure of TheHive</li>
+              <li>no inbound firewall exceptions required</li>
+              <li>MFA enforced before application access</li>
+              <li>TheHive remained bound to localhost only</li>
+              <li>SOC subnet placement preserved</li>
+              <li>TLS handled at Cloudflare edge</li>
+            </ul>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Challenges</div>
+            <h2>Challenges Encountered</h2>
+            <ul>
+              <li>traditional exposure models created HTTPS redirection issues, certificate handling difficulties, and DNS rebinding conflicts</li>
+              <li>older NAT-based publication patterns were operationally fragile for a sensitive SOC service</li>
+              <li>the challenge was not merely making TheHive reachable, but making it reachable without undermining segmentation and firewall posture</li>
+            </ul>
+            <p>
+              The final design solved that tension by making publication outbound-only and access identity-driven.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Wider SOC Role</div>
+            <h2>Relationship to the Wider SOC Stack</h2>
+            <p>
+              This project also clarified the role of TheHive relative to other tools in the SaintValTech environment.
+            </p>
+            <ul>
+              <li><strong>TheHive</strong> → analyst workspace and case management</li>
+              <li><strong>Sentinel</strong> → detection and response orchestration</li>
+              <li><strong>Wazuh / Security Onion</strong> → telemetry and alert generation</li>
+              <li><strong>Shuffle</strong> → automation broker</li>
+              <li><strong>Cloudflare Access</strong> → Zero Trust entry point</li>
+            </ul>
+            <p>
+              TheHive should be accessible to analysts, but supporting telemetry systems and backend components
+              should not all be exposed the same way.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Value</div>
+            <h2>Security &amp; Operational Value</h2>
+            <p>
+              This project demonstrates practical capability in:
+            </p>
+            <ul>
+              <li>Zero Trust service publication</li>
+              <li>Cloudflare Tunnel deployment</li>
+              <li>Cloudflare Access configuration</li>
+              <li>Microsoft Entra ID integration</li>
+              <li>MFA-enforced perimeter access</li>
+              <li>localhost-only application hardening</li>
+              <li>secure DNS-based publication design</li>
+              <li>eliminating NAT-based exposure for sensitive internal services</li>
+              <li>SOC platform access architecture</li>
+            </ul>
+            <p>
+              Operationally, this project matters because SOC tools like TheHive are high-value platforms.
+              Exposing them carelessly introduces unnecessary risk. This project shows an understanding that analyst access should be controlled,
+              identity-aware, auditable, minimally exposed, and architecturally clean.
+            </p>
+          </div>
+
+          <div class="section-card">
+            <div class="muted-label">Outcome</div>
+            <h2>Outcome</h2>
+            <p>
+              This project successfully exposed TheHive to authorized users without introducing inbound firewall exposure,
+              NAT complexity, or public application exposure. By combining Cloudflare Tunnel, Cloudflare Access, and Microsoft Entra ID,
+              the platform was transformed from an internally isolated service into a securely accessible SOC workspace protected
+              by identity-aware Zero Trust controls.
+            </p>
+            <p>
+              The result is a cleaner, safer, and more portfolio-worthy architecture than traditional port forwarding,
+              and it reflects how sensitive analyst platforms should be published in modern security environments.
+            </p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-card">
+            <div class="muted-label">Project Summary</div>
+            <h3>Quick Overview</h3>
+            <div class="meta-list">
+              <div class="meta-item">
+                <strong>Project Type</strong>
+                <span>Zero Trust / Secure Service Exposure / SOC Platform Access</span>
+              </div>
+              <div class="meta-item">
+                <strong>Core Platforms</strong>
+                <span>TheHive, Cloudflare Tunnel, Cloudflare Access, Microsoft Entra ID</span>
+              </div>
+              <div class="meta-item">
+                <strong>Focus Areas</strong>
+                <span>Zero Trust, MFA, identity-aware access, secure publication, analyst platform design</span>
+              </div>
+              <div class="meta-item">
+                <strong>Status</strong>
+                <span>Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Tools &amp; Technologies</div>
+            <h3>Tools Used</h3>
+            <ul>
+              <li>TheHive</li>
+              <li>Cloudflare Tunnel</li>
+              <li>cloudflared</li>
+              <li>Cloudflare Access</li>
+              <li>Microsoft Entra ID</li>
+              <li>Cloudflare DNS</li>
+              <li>pfSense</li>
+              <li>localhost service binding</li>
+              <li>MFA</li>
+              <li>self-hosted application publication controls</li>
+            </ul>
+          </div>
+
+          <div class="side-card" style="margin-top: 1.2rem;">
+            <div class="muted-label">Skills Demonstrated</div>
+            <h3>Key Skills</h3>
+            <ul>
+              <li>Zero Trust architecture design</li>
+              <li>secure external service publication</li>
+              <li>Cloudflare Tunnel deployment</li>
+              <li>identity-aware access enforcement</li>
+              <li>Entra ID integration</li>
+              <li>MFA access control</li>
+              <li>SOC platform hardening</li>
+              <li>service exposure minimization</li>
+              <li>infrastructure documentation</li>
+              <li>security architecture reasoning</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">SaintValTech</div>
+      <div>Cybersecurity portfolio and technical project platform for SOC, SIEM, incident response, SOAR, hybrid identity, and network security work.</div>
+      <div>© SaintValTech. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
